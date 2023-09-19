@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuer
 import org.springframework.stereotype.Service;
 
 import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTO;
-import com.viewnext.kidaprojects.agenciaviajes.mapper.PasajeroMapper;
+import com.viewnext.kidaprojects.agenciaviajes.mappers.PasajeroMapper;
 import com.viewnext.kidaprojects.agenciaviajes.model.Pasajero;
 import com.viewnext.kidaprojects.agenciaviajes.repository.PasajeroRepository;
 

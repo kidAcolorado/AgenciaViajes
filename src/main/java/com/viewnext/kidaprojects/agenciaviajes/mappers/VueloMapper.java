@@ -1,4 +1,4 @@
-package com.viewnext.kidaprojects.agenciaviajes.mapper;
+package com.viewnext.kidaprojects.agenciaviajes.mappers;
 
 import java.util.List;
 import java.util.stream.Collectors;

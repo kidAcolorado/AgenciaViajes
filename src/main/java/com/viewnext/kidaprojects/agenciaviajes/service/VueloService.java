@@ -16,7 +16,7 @@ import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuer
 import org.springframework.stereotype.Service;
 
 import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTO;
-import com.viewnext.kidaprojects.agenciaviajes.mapper.VueloMapper;
+import com.viewnext.kidaprojects.agenciaviajes.mappers.VueloMapper;
 import com.viewnext.kidaprojects.agenciaviajes.model.Vuelo;
 import com.viewnext.kidaprojects.agenciaviajes.repository.VueloRepository;
 
