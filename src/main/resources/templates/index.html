@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Agencia de Viajes</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <style>
+        .center-text {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+            padding: 20px;
+        }
+
+        .credentials-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+
+<body style="background-image: url('/images/menu.jpg'); background-repeat: no-repeat; background-size: cover;">
+
+    <!-- Incluye el Navbar utilizando Thymeleaf -->
+    <div th:replace="navbar.html"></div>
+
+    <div class="center-text">
+        <h1>"kid A project" es Víctor Colorado Gajardo</h1>
+        <p>Este proyecto fue realizado por "kid A project" durante el Master Java en ViewNext.</p>
+    </div>
+
+    <a href="https://www.freepik.es/foto-gratis/hombre-tiro-completo-viajando_22849671.htm#query=aeropuerto%20blanco%20y%20negro&position=11&from_view=search&track=ais">
+        <button type="button" class="btn btn-light btn-sm credentials-button">Fotografía Link</button>
+    </a>
+
+    <!-- Resto del contenido de tu página aquí -->
+
+    <!-- Bootstrap JS -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

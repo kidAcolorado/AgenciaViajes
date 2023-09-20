@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Reserva</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+    <!-- Incluye el Navbar utilizando Thymeleaf -->
+    <div th:replace="navbar.html"></div>
+    
+    <!-- Contenido de la página -->
+    <div class="container mt-4">
+        <h1>Crear Reserva</h1>
+        <hr>
+        <form id="formularioCrearReserva" th:action="@{/reserva/crear/crearreserva/}" th:object="${reservaSoloIdDTO}" method="post">
+            <div class="mb-3">
+                <label for="idVuelo" class="form-label">ID Vuelo:</label>
+                <input type="number" class="form-control" id="idVuelo" th:field="*{idVuelo}" required>
+            </div>
+            <div class="mb-3">
+                <label for="idPasajero" class="form-label">ID Pasajero:</label>
+                <input type="number" class="form-control" id="idPasjero" th:field="*{idPasajero}" required>
+            </div>
+            <div class="mb-3">
+                <label for="asiento" class="form-label">Asiento:</label>
+                <input type="text" class="form-control" id="asiento" th:field="*{asiento}" required>
+            </div>
+            <button type="submit" class="btn btn-dark">Crear Reserva</button>
+        </form>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

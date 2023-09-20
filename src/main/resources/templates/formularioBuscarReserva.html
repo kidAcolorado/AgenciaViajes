@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buscar Reserva</title>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+	<!-- Incluye el Navbar utilizando Thymeleaf -->
+	<div th:replace="navbar.html"></div>
+
+	<!-- Contenido de la página -->
+	<div class="container mt-4">
+		<h1>Buscar Reserva</h1>
+		<hr>
+		<form id="formularioBuscarReserva" action="#" method="get">
+			<div class="mb-3">
+				<label for="tipoBusqueda" class="form-label">Tipo de
+					búsqueda:</label> <select class="form-select" id="tipoBusqueda"
+					name="tipoBusqueda" required>
+					<option value="reserva">ID de reserva</option>
+					<option value="vuelo">ID de vuelo</option>
+					<option value="pasajero">ID de pasajero</option>
+				</select>
+			</div>
+			<div class="mb-3" id="campoBusqueda">
+				<label for="idBusqueda" class="form-label">Buscar por ID:</label> <input
+					type="number" class="form-control" id="idBusqueda"
+					name="idBusqueda" required>
+			</div>
+			<button type="submit" class="btn btn-dark">Buscar</button>
+		</form>
+	</div>
+
+	<!-- Bootstrap JS -->
+	<script src="/js/bootstrap.bundle.min.js"></script>
+	<script src="/js/kidAscripts/reserva.js"></script>
+	<script>
+		document.getElementById("formularioBuscarReserva").addEventListener(
+				"submit", function(event) {
+					event.preventDefault(); // Evita el envío del formulario
+					enviarFormularioReserva(); // Llama a la función para procesar el formulario
+				});
+
+	
+	</script>
+</body>
+
+</html>

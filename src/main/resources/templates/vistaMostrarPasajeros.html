@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Agencia de Viajes</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+    <!-- Incluye el Navbar utilizando Thymeleaf -->
+    <div th:replace="navbar.html"></div>
+
+    <!-- Contenido de la página -->
+    <div class="container mt-4">
+        <h1>Listado de Pasajeros</h1>
+        <hr>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Fecha de Nacimiento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Utiliza Thymeleaf para iterar sobre la lista de pasajeros y mostrarlos en la tabla -->
+                <tr th:each="pasajero : ${pasajeros}">
+                    <td th:text="${pasajero.id}"></td>
+                    <td th:text="${pasajero.nombre}"></td>
+                    <td th:text="${pasajero.apellido}"></td>
+                    <td th:text="${pasajero.fechaNacimiento}"></td>
+                    <td>
+                        <form th:action="@{/pasajero/mostrar/pasajero}" method="post">
+                            <input type="hidden" name="id" th:value="${pasajero.id}" />
+                            <button type="submit" class="btn btn-dark">Detalles</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

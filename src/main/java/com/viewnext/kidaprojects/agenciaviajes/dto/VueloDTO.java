@@ -3,7 +3,7 @@ package com.viewnext.kidaprojects.agenciaviajes.dto;
 import java.sql.Date;
 
 public class VueloDTO {
-	private int idVueloDTO;
+	private String idVueloDTO;
 	private String origen;
 	private String destino;
 	private Date fecha;
@@ -21,11 +21,11 @@ public class VueloDTO {
 
 
 
-	public int getIdVueloDTO() {
+	public String getIdVueloDTO() {
 		return idVueloDTO;
 	}
 
-	public void setIdVueloDTO(int idVueloDTO) {
+	public void setIdVueloDTO(String idVueloDTO) {
 		this.idVueloDTO = idVueloDTO;
 	}
 

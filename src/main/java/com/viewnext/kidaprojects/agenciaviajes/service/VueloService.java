@@ -5,16 +5,12 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 import org.springframework.stereotype.Service;
-
 import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTO;
 import com.viewnext.kidaprojects.agenciaviajes.mappers.VueloMapper;
 import com.viewnext.kidaprojects.agenciaviajes.model.Vuelo;
@@ -117,7 +113,7 @@ public class VueloService implements VueloRepository {
 				.filter(vuelo -> vuelo.getOrigen().equalsIgnoreCase(ciudadOrigen))
 				.filter(vuelo -> vuelo.getDestino().equalsIgnoreCase(ciudadDestino))
 				.filter(vuelo -> vuelo.getFecha().equals(fecha))
-				.collect(Collectors.toList());
+				.toList();
 
 		return listaVuelosFiltradaPorOrigenDestinoFecha;
 	}
@@ -185,11 +181,7 @@ public class VueloService implements VueloRepository {
 	 */
 	@Override
 	public boolean existsById(Integer id) {
-	    // Utiliza findById(id).orElse(null) para obtener el objeto Vuelo con el ID proporcionado
-	    Vuelo vuelo = vueloRepository.findById(id).orElse(null);
-	    
-	    // Si vuelo no es nulo, significa que existe un Vuelo con el ID proporcionado, devuelve true; de lo contrario, devuelve false
-	    return vuelo != null;
+	    return vueloRepository.existsById(id);
 	}
 
 	/**
@@ -429,7 +421,7 @@ public class VueloService implements VueloRepository {
 	
 	
 
-	// MÉTODOS POR IMPLEMENTAR EN UN FÚTURO:
+	
 	
 
 

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestor de Agencia de Viajes</title>
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+
+	<!-- Incluye el Navbar utilizando Thymeleaf -->
+	<div th:replace="navbar.html"></div>
+
+	<!-- Contenido de la página -->
+	<div class="container mt-4">
+		<h1>Detalles del Pasajero</h1>
+		<hr>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Nombre</th>
+					<th>Apellido</th>
+					<th>Fecha de Nacimiento</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- Utiliza Thymeleaf para mostrar los detalles del pasajero -->
+				<tr>
+					<td th:text="${pasajero.id}"></td>
+					<td th:text="${pasajero.nombre}"></td>
+					<td th:text="${pasajero.apellido}"></td>
+					<td th:text="${pasajero.fechaNacimiento}"></td>
+					<td>
+						<!-- Botón para mostrar el formulario de actualización -->
+						<button class="btn btn-dark" onclick="mostrarFormulario()">Actualizar</button>
+						<form
+							th:action="@{'/reserva/mostrar/idpasajero/' + ${pasajero.id}}"
+							method="get" class="d-inline">
+							<button type="submit" class="btn btn-dark">Mostrar
+								reservas</button>
+						</form>
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Formulario de actualización oculto por defecto -->
+	<div class="container mt-4" id="formulario-actualizacion"
+		style="display: none;">
+		<h1>Actualizar Pasajero</h1>
+		<form th:action="@{/pasajero/actualizar/}" method="post">
+			<input type="hidden" name="id" th:value="${pasajero.id}" />
+
+			<div class="mb-3">
+				<label for="nombre">Nombre:</label> <input type="text"
+					class="form-control" id="nombre" name="nombre"
+					th:value="${pasajero.nombre}">
+			</div>
+
+			<div class="mb-3">
+				<label for="apellido">Apellido:</label> <input type="text"
+					class="form-control" id="apellido" name="apellido"
+					th:value="${pasajero.apellido}">
+			</div>
+
+			<div class="mb-3">
+				<label for="fechaNacimiento">Fecha de Nacimiento:</label> <input
+					type="date" class="form-control" id="fechaNacimiento"
+					name="fechaNacimiento" th:value="${pasajero.fechaNacimiento}">
+			</div>
+
+			<button type="submit" class="btn btn-dark">Guardar Cambios</button>
+		</form>
+	</div>
+
+	<!-- Bootstrap JS -->
+	<script src="/js/bootstrap.bundle.min.js"></script>
+
+	<script>
+		function mostrarFormulario() {
+			// Mostrar el formulario de actualización y ocultar la tabla de detalles del pasajero
+			document.querySelector('h1').style.display = 'none';
+			document.getElementById('formulario-actualizacion').style.display = 'block';
+			document.getElementsByClassName('table')[0].style.display = 'none';
+		}
+	</script>
+
+</body>
+
+</html>

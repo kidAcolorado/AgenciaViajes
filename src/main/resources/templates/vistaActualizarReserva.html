@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestor de Agencia de Viajes</title>
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<style>
+.reserva-block, .vuelo-block, .pasajero-block {
+	font-size: 14px;
+	margin-bottom: 10px;
+}
+
+.reserva-block h2, .vuelo-block h2, .pasajero-block h2 {
+	font-size: 16px;
+	margin-bottom: 5px;
+}
+
+.table td, .table th {
+	padding: 5px 10px;
+}
+
+/* Estilos para mostrar elementos en una sola línea */
+.inline-table th, .inline-table td {
+	white-space: nowrap;
+	padding-right: 10px;
+}
+
+.actualizar-btn {
+	margin-top: 20px; /* Ajusta el valor según sea necesario */
+}
+</style>
+</head>
+
+<body>
+
+	<!-- Incluye el Navbar utilizando Thymeleaf -->
+	<div th:replace="navbar.html"></div>
+
+	<!-- Contenido de la página -->
+	<div class="container mt-4">
+		<h1>Detalles del proceso de actualización de la Reserva</h1>
+		<hr>
+		<!-- Mostrar el mensaje si está presente -->
+		<p th:if="${mensaje}" class="alert alert-success" role="alert"
+			th:text="${mensaje}"></p>
+		<!-- Línea horizontal -->
+		<div class="reserva-wrapper">
+			<div class="reserva-block">
+				<h2>Datos generales:</h2>
+				<table class="inline-table">
+					<tbody>
+						<tr>
+							<th>ID:</th>
+							<td th:text="${reservaDTO.id}"></td>
+							<th>Asiento:</th>
+							<td th:text="${reservaDTO.asiento}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="vuelo-block">
+				<h2>Datos de Vuelo reservado:</h2>
+				<table class="inline-table">
+					<tbody>
+						<tr>
+							<th>ID Vuelo:</th>
+							<td th:text="${reservaDTO.vueloDTO.id}"></td>
+							<th>Origen:</th>
+							<td th:text="${reservaDTO.vueloDTO.origen}"></td>
+							<th>Destino:</th>
+							<td th:text="${reservaDTO.vueloDTO.destino}"></td>
+							<th>Fecha:</th>
+							<td th:text="${reservaDTO.vueloDTO.fecha}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="pasajero-block">
+				<h2>Reserva a nombre de:</h2>
+				<table class="inline-table">
+					<tbody>
+						<tr>
+							<th>ID Pasajero:</th>
+							<td th:text="${reservaDTO.pasajeroDTO.id}"></td>
+							<th>Nombre:</th>
+							<td th:text="${reservaDTO.pasajeroDTO.nombre}"></td>
+							<th>Apellido:</th>
+							<td th:text="${reservaDTO.pasajeroDTO.apellido}"></td>
+							<th>Fecha de Nacimiento:</th>
+							<td th:text="${reservaDTO.pasajeroDTO.fechaNacimiento}"></td>
+
+
+						</tr>
+					</tbody>
+				</table>
+
+
+			</div>
+		</div>
+	</div>
+
+
+
+	<!-- Bootstrap JS -->
+	<script src="/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+
+</html>

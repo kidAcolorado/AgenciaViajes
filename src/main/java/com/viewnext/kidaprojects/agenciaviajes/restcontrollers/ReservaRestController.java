@@ -1,6 +1,5 @@
 package com.viewnext.kidaprojects.agenciaviajes.restcontrollers;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,10 @@ public class ReservaRestController {
 
 	@Autowired
 	private ReservaService reservaService;
+	
+	private static final String RESERVA_NOT_FOUND = "Reserva con las características indicadas no encontrada";
+	private static final String IDVUELO_NOT_FOUND = "Reserva con ID de Vuelo introducido no encontrada";
+	private static final String IDPASAJERO_NOT_FOUND = "Reserva con ID de Pasajero introducido no encontrada";
 
 	/**
 	 * Obtiene todas las reservas.
@@ -33,7 +36,7 @@ public class ReservaRestController {
 	 * @return ResponseEntity con la lista de ReservaDTO en el cuerpo de la
 	 *         respuesta.
 	 */
-	@GetMapping("/mostrar/")
+	@GetMapping
 	public ResponseEntity<List<ReservaDTO>> getAllReservas() {
 		List<ReservaDTO> listaReservasDTO;
 
@@ -47,125 +50,86 @@ public class ReservaRestController {
 	 * 
 	 * @param id El ID de la reserva a obtener.
 	 * @return ResponseEntity con el objeto ReservaDTO si se encuentra la reserva, o
-	 *         un mensaje de error si no se encuentra.
+	 *         ResponseEntity con código de estado Not Found y un mensaje de error si no se encuentra.
 	 */
-	@GetMapping("/mostrar/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> getReservaById(@PathVariable Integer id) {
-		try {
-			ReservaDTO reservaDTO;
+	    try {
+	        ReservaDTO reservaDTO;
 
-			reservaDTO = reservaService.getReservaByid(id);
+	        // Llama al servicio para obtener la reserva por su ID
+	        reservaDTO = reservaService.getReservaByid(id);
 
-			return ResponseEntity.ok(reservaDTO);
+	        // Retorna una respuesta con la reserva si se encuentra
+	        return ResponseEntity.ok(reservaDTO);
 
-		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("La Reserva con ID introducido no fue encontrada");
+	    } catch (EntityNotFoundException e) {
+	        // En caso de que la reserva no se encuentre, retorna una respuesta con estado Not Found
+	        // y un mensaje de error
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(RESERVA_NOT_FOUND);
 
-		}
+	    }
 	}
+
 
 	/**
 	 * Obtiene las reservas por el ID de vuelo.
 	 * 
 	 * @param id El ID del vuelo.
 	 * @return ResponseEntity con la lista de ReservaDTO correspondiente a las
-	 *         reservas encontradas.
-	 * @throws EntityNotFoundException si no se encuentran reservas para el ID de
-	 *                                 vuelo especificado.
+	 *         reservas encontradas, o ResponseEntity con código de estado Not Found si
+	 *         no se encuentran reservas para el ID de vuelo especificado.
 	 */
-	@GetMapping("/mostrar/idvuelo/{id}")
+	@GetMapping("/idvuelo/{id}")
 	public ResponseEntity<?> getReservaByIdVuelo(@PathVariable Integer id) {
-		try {
-			List<ReservaDTO> listaReservasDTOPorIdVuelo;
+	    try {
+	        List<ReservaDTO> listaReservasDTOPorIdVuelo;
 
-			listaReservasDTOPorIdVuelo = reservaService.obtenerReservasPorVuelo(id);
+	        // Llama al servicio para obtener las reservas por el ID del vuelo
+	        listaReservasDTOPorIdVuelo = reservaService.obtenerReservasPorVuelo(id);
 
-			return ResponseEntity.ok(listaReservasDTOPorIdVuelo);
+	        // Retorna una respuesta con las reservas si se encontraron
+	        return ResponseEntity.ok(listaReservasDTOPorIdVuelo);
 
-		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("No fueron encontradas Reservas con Vuelo cuyo ID sea el introducido");
+	    } catch (EntityNotFoundException e) {
+	        // En caso de que no se encuentren reservas para el vuelo especificado, retorna una respuesta con estado Not Found
+	        // y un mensaje de error
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(IDVUELO_NOT_FOUND);
 
-		}
+	    }
 	}
+
 
 	/**
 	 * Obtiene las reservas por el ID del pasajero.
 	 * 
 	 * @param id El ID del pasajero.
 	 * @return ResponseEntity con la lista de ReservaDTO correspondiente a las
-	 *         reservas encontradas.
-	 * @throws EntityNotFoundException si no se encuentran reservas para el ID del
-	 *                                 pasajero especificado.
+	 *         reservas encontradas, o ResponseEntity con código de estado Not Found si
+	 *         no se encuentran reservas para el ID del pasajero especificado.
 	 */
-	@GetMapping("/mostrar/idpasajero/{id}")
+	@GetMapping("/idpasajero/{id}")
 	public ResponseEntity<?> getReservaByIdPasajero(@PathVariable Integer id) {
-		try {
-			List<ReservaDTO> listaReservasDTOPorIdPasajero;
-			
-			listaReservasDTOPorIdPasajero = reservaService.obtenerReservasPorPasajero(id);
+	    try {
+	        List<ReservaDTO> listaReservasDTOPorIdPasajero;
+	        
+	        // Llama al servicio para obtener las reservas del pasajero por su ID
+	        listaReservasDTOPorIdPasajero = reservaService.obtenerReservasPorPasajero(id);
 
-			return ResponseEntity.ok(listaReservasDTOPorIdPasajero);
+	        // Retorna una respuesta con las reservas si se encontraron
+	        return ResponseEntity.ok(listaReservasDTOPorIdPasajero);
 
-		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("No fueron encontradas Reservas con Pasajero cuyo ID sea el introducido");
+	    } catch (EntityNotFoundException e) {
+	        // En caso de que no se encuentren reservas para el pasajero, retorna una respuesta con estado Not Found
+	        // y un mensaje de error
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(IDPASAJERO_NOT_FOUND);
 
-		}
+	    }
 	}
-
-	/**
-	 * Elimina un vuelo por su ID.
-	 *
-	 * @param id ID del vuelo a eliminar.
-	 * @return ResponseEntity con un mensaje de éxito si el vuelo se eliminó correctamente,
-	 *         o ResponseEntity con estado 404 (No encontrado) y un mensaje de error si el vuelo no existe.
-	 */
-	@DeleteMapping("/borrar/{id}")
-	public ResponseEntity<String> deleteReservaById(@PathVariable Integer id) {
-		try {
-			reservaService.deleteById(id);
-			String mensajeExito = "La Reserva con ID introducido fue eliminada exitosamente.";
-			return ResponseEntity.ok(mensajeExito);
-		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("La Reserva con el ID introducido no fue encontrada");
-		}
-	}
-
-	/**
-	 * Actualiza una reserva por su ID utilizando los datos proporcionados en el
-	 * objeto ReservaDTO.
-	 * 
-	 * @param id         El ID de la reserva a actualizar.
-	 * @param reservaDTO El objeto ReservaDTO con los datos actualizados.
-	 * @return ResponseEntity con el objeto ReservaDTO actualizado en el cuerpo de
-	 *         la respuesta si la actualización es exitosa.
-	 * @throws EntityNotFoundException si no se encuentra la reserva con el ID
-	 *                                 especificado.
-	 */
-	@PutMapping("/actualizar/params")
-	public ResponseEntity<?> updateReservaByIdVueloIdPasajeroAsiento(@RequestParam Integer idReserva, @RequestParam Integer idVuelo,
-			@RequestParam Integer idPasajero, @RequestParam String asiento) {
-		try {
-			ReservaDTO reservaDTOParaUpdate;
-			
-			reservaDTOParaUpdate = reservaService.getReservaByIdVueloIdPasajeroAsiento(idVuelo, idPasajero, asiento);
-			
-			reservaDTOParaUpdate.setIdReservaDTO(idReserva);
-			
-			reservaDTOParaUpdate = reservaService.updateReservaById(idReserva, reservaDTOParaUpdate);
-
-			return ResponseEntity.ok(reservaDTOParaUpdate);
-
-		} catch (EntityNotFoundException e) {
-
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("La Reserva con el ID introducido no fue encontrada");
-		}
-	}
-
+	
 	/**
 	 * Crea una reserva a partir de los IDs de vuelo y pasajero, y el número de
 	 * asiento proporcionados.
@@ -176,21 +140,85 @@ public class ReservaRestController {
 	 * @return ResponseEntity con el objeto DTO de la reserva creada o un mensaje de
 	 *         error si no se encuentra el vuelo o el pasajero.
 	 */
-	@PostMapping("/crear/params")
+	@PostMapping
 	public ResponseEntity<?> createReservaByIdVueloAndIdPasajeroAsiento(@RequestParam Integer idVuelo,
 			@RequestParam Integer idPasajero, @RequestParam String asiento) {
 
 		try {
-			ReservaDTO reservaDTO;
+			ReservaDTO nuevaReservaDTO;
 
-			reservaDTO = reservaService.createReservaByIdVueloIdPasajeroAsiento(idVuelo, idPasajero, asiento);
+			nuevaReservaDTO = reservaService.createReservaByIdVueloIdPasajeroAsiento(idVuelo, idPasajero, asiento);
 
-			return ResponseEntity.ok(reservaDTO);
+			return ResponseEntity.status(HttpStatus.CREATED) // Configura el código de estado a CREATED (201)
+					.body(nuevaReservaDTO); // Agrega el objeto DTO como cuerpo de la respuesta
 
 		} catch (EntityNotFoundException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("No se encontraron pasajeros o vuelos con los IDs introducidos");
+					.body(IDVUELO_NOT_FOUND + " o " + IDPASAJERO_NOT_FOUND);
 
 		}
 	}
+
+	/**
+	 * Elimina una reserva por su ID.
+	 *
+	 * @param id ID de la reserva a eliminar.
+	 * @return ResponseEntity con un mensaje de éxito si la reserva se eliminó correctamente,
+	 *         o ResponseEntity con estado 404 (No encontrado) y un mensaje de error si la reserva no existe.
+	 */
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deleteReservaById(@PathVariable Integer id) {
+		try {
+			// Llama al servicio para eliminar el pasajero por su ID
+			reservaService.deleteReservaById(id);
+			
+			 // Devuelve una respuesta sin contenido (204 No Content) para indicar éxito en la eliminación
+	        return ResponseEntity.noContent().build();
+		} catch (EntityNotFoundException e) {
+			// En caso de que el pasajero no se encuentre, devuelve una respuesta 404 Not Found
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(RESERVA_NOT_FOUND);
+		}
+	}
+	
+
+	/**
+	 * Actualiza una reserva por su ID utilizando los datos proporcionados en el
+	 * objeto ReservaDTO.
+	 *
+	 * @param idReserva  El ID de la reserva a actualizar.
+	 * @param idVuelo    El ID del vuelo asociado a la reserva.
+	 * @param idPasajero El ID del pasajero asociado a la reserva.
+	 * @param asiento    El número de asiento asociado a la reserva.
+	 * @return ResponseEntity con el objeto ReservaDTO actualizado en el cuerpo de
+	 *         la respuesta si la actualización es exitosa.
+	 * @throws EntityNotFoundException si no se encuentra la reserva con el ID
+	 *                                 especificado.
+	 */
+	@PutMapping("/actualizar")
+	public ResponseEntity<?> updateReservaByIdVueloIdPasajeroAsiento(@RequestParam Integer idReserva,
+	        @RequestParam Integer idVuelo, @RequestParam Integer idPasajero, @RequestParam String asiento) {
+	    try {
+	        // Obtiene la reserva a actualizar utilizando los IDs proporcionados
+	        ReservaDTO reservaDTOParaUpdate = reservaService.getReservaByIdVueloIdPasajeroAsiento(idVuelo, idPasajero, asiento);
+	        
+	        // Establece el ID de la reserva a actualizar
+	        reservaDTOParaUpdate.setIdReservaDTO(String.valueOf(idReserva));
+	        
+	        // Actualiza la reserva en el servicio y obtiene la versión actualizada
+	        reservaDTOParaUpdate = reservaService.updateReservaById(idReserva, reservaDTOParaUpdate);
+
+	        // Retorna una respuesta con status 200 (OK) y la reserva actualizada
+	        return ResponseEntity.ok(reservaDTOParaUpdate);
+
+	    } catch (EntityNotFoundException e) {
+	        // En caso de que no se encuentre la reserva, devuelve una respuesta 404 Not Found
+	        // con un mensaje de error
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(RESERVA_NOT_FOUND);
+	    }
+	}
+
+
+	
 }

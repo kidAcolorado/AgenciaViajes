@@ -2,7 +2,7 @@ package com.viewnext.kidaprojects.agenciaviajes.dto;
 
 public class ReservaDTO {
 
-	private int idReservaDTO;
+	private String idReservaDTO;
 	private String asiento;
 	private VueloDTO vueloDTO;
 	private PasajeroDTO pasajeroDTO;
@@ -20,11 +20,11 @@ public class ReservaDTO {
 
 
 
-	public int getIdReservaDTO() {
+	public String getIdReservaDTO() {
 		return idReservaDTO;
 	}
 
-	public void setIdReservaDTO(int idReservaDTO) {
+	public void setIdReservaDTO(String idReservaDTO) {
 		this.idReservaDTO = idReservaDTO;
 	}
 

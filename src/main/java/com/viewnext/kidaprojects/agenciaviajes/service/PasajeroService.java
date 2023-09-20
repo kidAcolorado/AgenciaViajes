@@ -162,12 +162,10 @@ public class PasajeroService implements PasajeroRepository {
 	 */
 	@Override
 	public boolean existsById(Integer id) {
-	    // Consulta la base de datos para verificar si existe un Pasajero con el ID proporcionado
-	    Pasajero pasajero = pasajeroRepository.findById(id).orElse(null);
 	    
-	    // Si se encuentra un Pasajero con el ID, devuelve true; de lo contrario, devuelve false
-	    return pasajero != null;
+	    return pasajeroRepository.existsById(id);
 	}
+
 
 	/**
 	 * Elimina un pasajero por su ID.

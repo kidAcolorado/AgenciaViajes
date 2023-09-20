@@ -1,11 +1,7 @@
 package com.viewnext.kidaprojects.agenciaviajes.mappers;
 
 import java.util.List;
-
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Component;
-
 import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTO;
 import com.viewnext.kidaprojects.agenciaviajes.model.Pasajero;
 
@@ -24,7 +20,8 @@ public class PasajeroMapper {
 	 */
 	public PasajeroDTO toPasajeroDTO(Pasajero pasajero) {
 		PasajeroDTO pasajeroDTO = new PasajeroDTO();
-		pasajeroDTO.setIdPasajeroDTO(pasajero.getIdPasajero());
+		//Realizar conversion entre idPasajero(int) y idPasajeroDTO(String)		 
+		pasajeroDTO.setIdPasajeroDTO(String.valueOf(pasajero.getIdPasajero()));
 		pasajeroDTO.setNombre(pasajero.getNombre());
 		pasajeroDTO.setApellido(pasajero.getApellido());
 		pasajeroDTO.setFechaNacimiento(pasajero.getFechaNacimiento());
@@ -40,7 +37,8 @@ public class PasajeroMapper {
 	 */
 	public Pasajero toPasajero(PasajeroDTO pasajeroDTO) {
 		Pasajero pasajero = new Pasajero();
-		pasajero.setIdPasajero(pasajeroDTO.getIdPasajeroDTO());
+		//Realizar conversion entre idPasajeroDTO(String) y idPasajero(int)
+		pasajero.setIdPasajero(Integer.parseInt(pasajeroDTO.getIdPasajeroDTO()));
 		pasajero.setNombre(pasajeroDTO.getNombre());
 		pasajero.setApellido(pasajeroDTO.getApellido());
 		pasajero.setFechaNacimiento(pasajeroDTO.getFechaNacimiento());
@@ -57,7 +55,7 @@ public class PasajeroMapper {
 	public List<PasajeroDTO> toPasajeroDTOList(List<Pasajero> listaPasajeros) {
 		return listaPasajeros.stream()
 				.map(this::toPasajeroDTO)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	/**
@@ -70,7 +68,7 @@ public class PasajeroMapper {
 	public List<Pasajero> toPasajeroList(List<PasajeroDTO> listaPasajeroDTOs) {
 		return listaPasajeroDTOs.stream()
 				.map(this::toPasajero)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 }

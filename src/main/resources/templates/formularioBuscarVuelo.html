@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Vuelo</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+    <!-- Incluye el Navbar utilizando Thymeleaf -->
+    <div th:replace="navbar.html"></div>
+
+    <!-- Contenido de la página -->
+    <div class="container mt-4">
+        <h1>Buscar Vuelo</h1>
+        <hr>
+        <h3>Búsqueda por ID</h3>
+        <form id="formularioBuscarVueloId" action="/vuelo/mostrar/param" method="post">
+            <div class="mb-3">
+                <label for="id" class="form-label">Introduzca Id del vuelo:</label>
+                <input type="number" class="form-control" id="id" name="id" required>
+            </div>
+            <button type="submit" class="btn btn-dark">Buscar</button>
+        </form>
+        <hr>
+        <h3>Búsqueda por Origen, Destino y Fecha</h3>
+        <form id="formularioBuscarVueloParams" action="/vuelo/buscar/params" method="post">
+            <div class="mb-3">
+                <label for="origen" class="form-label">Ciudad de Origen:</label>
+                <input type="text" class="form-control" id="origen" name="origen" required>
+            </div>
+            <div class="mb-3">
+                <label for="destino" class="form-label">Ciudad de Destino:</label>
+                <input type="text" class="form-control" id="destino" name="destino" required>
+            </div>
+            <div class="mb-3">
+                <label for="fecha" class="form-label">Fecha:</label>
+                <input type="date" class="form-control" id="fecha" name="fecha" required>
+            </div>
+            <button type="submit" class="btn btn-dark">Buscar</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+
+</html>

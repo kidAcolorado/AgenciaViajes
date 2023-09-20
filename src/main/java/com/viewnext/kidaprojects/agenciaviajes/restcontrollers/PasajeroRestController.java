@@ -26,13 +26,15 @@ public class PasajeroRestController {
 	@Autowired
 	private PasajeroService pasajeroService;
 
+	private static final String PASAJERO_NOT_FOUND = "El pasajero con el ID introducido no fue encontrado";
+
 	/**
 	 * Obtiene todos los pasajeros.
 	 *
 	 * @return ResponseEntity con la lista de PasajeroDTO en el cuerpo de la
 	 *         respuesta.
 	 */
-	@GetMapping("/mostrar/")
+	@GetMapping
 	public ResponseEntity<List<PasajeroDTO>> getAllPasajeros() {
 		List<PasajeroDTO> listaPasajerosDTO;
 
@@ -40,7 +42,7 @@ public class PasajeroRestController {
 
 		return ResponseEntity.ok(listaPasajerosDTO);
 	}
-	
+
 	/**
 	 * Obtiene un pasajero por su ID.
 	 * 
@@ -49,16 +51,15 @@ public class PasajeroRestController {
 	 *         o ResponseEntity con código de estado Not Found y un mensaje de error
 	 *         si no se encuentra.
 	 */
-	@GetMapping("/mostrar/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> getPasajeroById(@PathVariable Integer id) {
 		try {
 			PasajeroDTO pasajeroDTO = pasajeroService.getPasajeroById(id);
-			
+
 			return ResponseEntity.ok(pasajeroDTO);
-			
+
 		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("El pasajero con el ID introducido no fue encontrado");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PASAJERO_NOT_FOUND);
 
 		}
 	}
@@ -69,70 +70,61 @@ public class PasajeroRestController {
 	 * @param pasajeroDTO El objeto DTO que contiene los datos del pasajero a crear.
 	 * @return ResponseEntity con el objeto DTO del nuevo pasajero creado.
 	 */
-	@PostMapping("/crear/")
+	@PostMapping
 	public ResponseEntity<PasajeroDTO> createPasajero(@RequestBody PasajeroDTO pasajeroDTO) {
 		PasajeroDTO nuevoPasajeroDTO;
 
 		nuevoPasajeroDTO = pasajeroService.createPasajero(pasajeroDTO);
 
-		return ResponseEntity.ok(nuevoPasajeroDTO);
+		return ResponseEntity.status(HttpStatus.CREATED) // Configura el código de estado a CREATED (201)
+				.body(nuevoPasajeroDTO); // Agrega el objeto DTO como cuerpo de la respuesta
 	}
 
-	
-
 	/**
 	 * Elimina un pasajero por su ID.
 	 *
 	 * @param id ID del pasajero a eliminar.
-	 * @return ResponseEntity con una cadena vacía en el cuerpo de la respuesta si
-	 *         se elimina correctamente, o ResponseEntity con estado 404 (No
+	 * @return ResponseEntity con un mensaje de éxito en el cuerpo de la respuesta
+	 *         si se elimina correctamente, o ResponseEntity con estado 404 (No
 	 *         encontrado) y un mensaje de error si el pasajero no existe.
 	 */
-	/**
-	 * Elimina un pasajero por su ID.
-	 *
-	 * @param id ID del pasajero a eliminar.
-	 * @return ResponseEntity con un mensaje de éxito en el cuerpo de la respuesta si
-	 *         se elimina correctamente, o ResponseEntity con estado 404 (No
-	 *         encontrado) y un mensaje de error si el pasajero no existe.
-	 */
-	@DeleteMapping("/borrar/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deletePasajeroById(@PathVariable Integer id) {
 	    try {
+	        // Llama al servicio para eliminar el pasajero por su ID
 	        pasajeroService.deletePasajeroById(id);
-	        String mensajeExito = "El Pasajero con ID introducido fue eliminado exitosamente.";
-	        return ResponseEntity.ok(mensajeExito);
+
+	        // Devuelve una respuesta sin contenido (204 No Content) para indicar éxito en la eliminación
+	        return ResponseEntity.noContent().build();
 	    } catch (EntityNotFoundException e) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                .body("El pasajero con el ID introducido no fue encontrado");
+	        // En caso de que el pasajero no se encuentre, devuelve una respuesta 404 Not Found
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PASAJERO_NOT_FOUND);
 	    }
 	}
-
 
 
 	/**
 	 * Actualiza los datos de un pasajero existente en la base de datos utilizando
 	 * el ID especificado.
 	 * 
-	 * @param idPasajeroUpdate El ID del pasajero que se desea actualizar.
-	 * @param pasajeroDTO      El objeto DTO que contiene los nuevos datos del
-	 *                         pasajero.
-	 * @return ResponseEntity con el objeto DTO del pasajero actualizado en caso de
-	 *         éxito, o ResponseEntity con status 404 (Not Found) en caso de que el
-	 *         pasajero no exista.
+	 * @param id           El ID del pasajero que se desea actualizar.
+	 * @param pasajeroDTO  El objeto DTO que contiene los nuevos datos del pasajero.
+	 * @return ResponseEntity con el objeto DTO del pasajero actualizado en caso de éxito,
+	 *         o ResponseEntity con status 404 (Not Found) en caso de que el pasajero no exista.
 	 */
-	@PutMapping("/actualizar/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<?> updatePasajeroById(@PathVariable Integer id, @RequestBody PasajeroDTO pasajeroDTO) {
-		
-		try {
-			pasajeroDTO = pasajeroService.updatePasajeroById(id, pasajeroDTO);
+	    try {
+	        // Llama al servicio para actualizar los datos del pasajero por su ID
+	        pasajeroDTO = pasajeroService.updatePasajeroById(id, pasajeroDTO);
 
-			return ResponseEntity.ok(pasajeroDTO);
-		} catch (EntityNotFoundException e) {
-
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("El pasajero con el ID introducido no fue encontrado");
-		}
+	        // Devuelve una respuesta con status 200 (OK) y el objeto DTO del pasajero actualizado
+	        return ResponseEntity.ok(pasajeroDTO);
+	    } catch (EntityNotFoundException e) {
+	        // En caso de que el pasajero no se encuentre, devuelve una respuesta 404 Not Found
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PASAJERO_NOT_FOUND);
+	    }
 	}
+
 
 }

@@ -10,19 +10,19 @@ public class WebClientConfig {
 	private static final String BASE_URL = "http://localhost:8080";
 
     @Bean
-    public WebClient pasajeroWebClient() {
+    WebClient pasajeroWebClient() {
         String apiUrl = BASE_URL + "/api/pasajero/";
         return WebClient.create(apiUrl);
     }
 
     @Bean
-    public WebClient vueloWebClient() {
+    WebClient vueloWebClient() {
         String apiUrl = BASE_URL + "/api/vuelo/";
         return WebClient.create(apiUrl);
     }
 
     @Bean
-    public WebClient reservaWebClient() {
+    WebClient reservaWebClient() {
         String apiUrl = BASE_URL + "/api/reserva/";
         return WebClient.create(apiUrl);
     }

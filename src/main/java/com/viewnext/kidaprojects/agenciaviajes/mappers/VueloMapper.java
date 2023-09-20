@@ -1,9 +1,7 @@
 package com.viewnext.kidaprojects.agenciaviajes.mappers;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
-
 import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTO;
 import com.viewnext.kidaprojects.agenciaviajes.model.Vuelo;
 
@@ -21,7 +19,8 @@ public class VueloMapper {
 	 */
 	public VueloDTO toVueloDTO(Vuelo vuelo) {
 		VueloDTO vueloDTO = new VueloDTO();
-		vueloDTO.setIdVueloDTO(vuelo.getIdVuelo());
+		//Realizar conversión entre idVuelo(int) y idVueloDTO(String)
+		vueloDTO.setIdVueloDTO(String.valueOf(vuelo.getIdVuelo()));
 		vueloDTO.setOrigen(vuelo.getOrigen());
 		vueloDTO.setDestino(vuelo.getDestino());
 		vueloDTO.setFecha(vuelo.getFecha());
@@ -36,7 +35,8 @@ public class VueloMapper {
 	 */
 	public Vuelo toVuelo(VueloDTO vueloDTO) {
 		Vuelo vuelo = new Vuelo();
-		vuelo.setIdVuelo(vueloDTO.getIdVueloDTO());
+		//Realizar conversión entre idVueloDTO(String) y idVuelo(int)
+		vuelo.setIdVuelo(Integer.parseInt(vueloDTO.getIdVueloDTO()));
 		vuelo.setOrigen(vueloDTO.getOrigen());
 		vuelo.setDestino(vueloDTO.getDestino());
 		vuelo.setFecha(vueloDTO.getFecha());
@@ -51,7 +51,9 @@ public class VueloMapper {
 	 *         Vuelos de entrada.
 	 */
 	public List<VueloDTO> toVueloDTOList(List<Vuelo> listaVuelos) {
-		return listaVuelos.stream().map(this::toVueloDTO).collect(Collectors.toList());
+		return listaVuelos.stream()
+				.map(this::toVueloDTO)
+				.toList();
 	}
 
 	/**
@@ -62,6 +64,8 @@ public class VueloMapper {
 	 *         VueloDTO de entrada.
 	 */
 	public List<Vuelo> toVueloList(List<VueloDTO> listaVueloDTOs) {
-		return listaVueloDTOs.stream().map(this::toVuelo).collect(Collectors.toList());
+		return listaVueloDTOs.stream()
+				.map(this::toVuelo)
+				.toList();
 	}
 }

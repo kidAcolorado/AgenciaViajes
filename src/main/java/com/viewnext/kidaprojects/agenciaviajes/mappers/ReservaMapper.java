@@ -1,10 +1,7 @@
 package com.viewnext.kidaprojects.agenciaviajes.mappers;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Component;
-
 import com.viewnext.kidaprojects.agenciaviajes.dto.ReservaDTO;
 import com.viewnext.kidaprojects.agenciaviajes.model.Reserva;
 
@@ -39,7 +36,8 @@ public class ReservaMapper {
 	 */
 	public ReservaDTO toReservaDTO(Reserva reserva) {
 		ReservaDTO reservaDTO = new ReservaDTO();
-		reservaDTO.setIdReservaDTO(reserva.getIdReserva());
+		//Realizar la conversión entre idReservaDTO(String) y idReserva(int)
+		reservaDTO.setIdReservaDTO(String.valueOf(reserva.getIdReserva()));
 		reservaDTO.setAsiento(reserva.getAsiento());
 		reservaDTO.setVueloDTO(vueloMapper.toVueloDTO(reserva.getVuelo()));
 		reservaDTO.setPasajeroDTO(pasajeroMapper.toPasajeroDTO(reserva.getPasajero()));
@@ -54,7 +52,8 @@ public class ReservaMapper {
 	 */
 	public Reserva toReserva(ReservaDTO reservaDTO) {
 		Reserva reserva = new Reserva();
-		reserva.setIdReserva(reservaDTO.getIdReservaDTO());
+		//Realizar la conversión entre idReservaDTO(String) y idReserva(int)
+		reserva.setIdReserva(Integer.parseInt(reservaDTO.getIdReservaDTO()));
 		reserva.setAsiento(reservaDTO.getAsiento());
 		reserva.setVuelo(vueloMapper.toVuelo(reservaDTO.getVueloDTO()));
 		reserva.setPasajero(pasajeroMapper.toPasajero(reservaDTO.getPasajeroDTO()));
@@ -71,7 +70,7 @@ public class ReservaMapper {
 	public List<ReservaDTO> toReservaDTOList(List<Reserva> listaReservas) {
 		return listaReservas.stream()
 				.map(this::toReservaDTO)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	/**
@@ -84,6 +83,6 @@ public class ReservaMapper {
 	public List<Reserva> toReservaList(List<ReservaDTO> listaReservaDTOs) {
 		return listaReservaDTOs.stream()
 				.map(this::toReserva)
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

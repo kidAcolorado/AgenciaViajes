@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Agencia de Viajes</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+
+    <!-- Incluye el Navbar utilizando Thymeleaf -->
+    <div th:replace="navbar.html"></div>
+
+    <!-- Contenido de la página -->
+    <div class="container mt-4">
+        <h1>Detalles del Vuelo</h1>
+        <hr>
+        <div th:if="${mensaje}">
+            <div class="alert alert-success" role="alert" th:text="${mensaje}"></div>
+        </div>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Origen</th>
+                    <th>Destino</th>
+                    <th>Fecha de Vuelo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td th:text="${nuevoVuelo.origen}"></td>
+                    <td th:text="${nuevoVuelo.destino}"></td>
+                    <td th:text="${nuevoVuelo.fecha}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

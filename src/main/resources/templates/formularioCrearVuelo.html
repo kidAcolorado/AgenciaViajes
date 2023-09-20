@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Vuelo</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+    <!-- Incluye el Navbar utilizando Thymeleaf -->
+    <div th:replace="navbar.html"></div>
+    
+    <!-- Contenido de la página -->
+    <div class="container mt-4">
+        <h1>Crear Vuelo</h1>
+        <hr>
+        <form id="formularioCrearVuelo" th:action="@{/vuelo/crear/crearvuelo/}" th:object="${vueloDTO}" method="post">
+            <div class="mb-3">
+                <label for="origen" class="form-label">Origen:</label>
+                <input type="text" class="form-control" id="origen" th:field="*{origen}" required>
+            </div>
+            <div class="mb-3">
+                <label for="destino" class="form-label">Destino:</label>
+                <input type="text" class="form-control" id="destino" th:field="*{destino}" required>
+            </div>
+            <div class="mb-3">
+                <label for="fecha" class="form-label">Fecha de Vuelo:</label>
+                <input type="date" class="form-control" id="fecha" th:field="*{fecha}" required>
+            </div>
+            <button type="submit" class="btn btn-dark">Crear Vuelo</button>
+        </form>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
