@@ -15,7 +15,7 @@
     <div class="container mt-4">
         <h1>Crear Reserva</h1>
         <hr>
-        <form id="formularioCrearReserva" th:action="@{/reserva/crear/crearreserva/}" th:object="${reservaSoloIdDTO}" method="post">
+        <form id="formularioCrearReserva" th:action="@{/reserva/crear/}" th:object="${reservaSoloIdDTO}" method="post">
             <div class="mb-3">
                 <label for="idVuelo" class="form-label">ID Vuelo:</label>
                 <input type="number" class="form-control" id="idVuelo" th:field="*{idVuelo}" required>

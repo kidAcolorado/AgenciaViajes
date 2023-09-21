@@ -56,7 +56,7 @@
 									<tbody>
 										<tr>
 											<th>ID:</th>
-											<td th:text="${reserva.id}"></td>
+											<td th:text="${reserva.idReservaDTO}"></td>
 											<th>Asiento:</th>
 											<td th:text="${reserva.asiento}"></td>
 										</tr>
@@ -96,12 +96,10 @@
 								</table>
 							</div>
 							<!-- Botón Detalles -->
-							<div class="text-end mt-2">
-								<form th:action="@{'/reserva/mostrar/' + ${reserva.id}}"
-									method="get">
-									<button type="submit" class="btn btn-dark">Detalles</button>
-								</form>
-							</div>
+							<form th:action="@{/reserva/id}" method="get">
+							<input type="hidden" name="id" th:value="${reserva.idReservaDTO}" />
+							<button type="submit" class="btn btn-dark">Detalles</button>
+						</form>
 						</div>
 					</td>
 				</tr>

@@ -18,7 +18,7 @@
         <h1>Buscar Vuelo</h1>
         <hr>
         <h3>Búsqueda por ID</h3>
-        <form id="formularioBuscarVueloId" action="/vuelo/mostrar/param" method="post">
+        <form id="formularioBuscarVueloId" action="/vuelo/id" method="get">
             <div class="mb-3">
                 <label for="id" class="form-label">Introduzca Id del vuelo:</label>
                 <input type="number" class="form-control" id="id" name="id" required>
@@ -27,7 +27,7 @@
         </form>
         <hr>
         <h3>Búsqueda por Origen, Destino y Fecha</h3>
-        <form id="formularioBuscarVueloParams" action="/vuelo/buscar/params" method="post">
+        <form id="formularioBuscarVueloParams" action="/vuelo/params" method="get">
             <div class="mb-3">
                 <label for="origen" class="form-label">Ciudad de Origen:</label>
                 <input type="text" class="form-control" id="origen" name="origen" required>

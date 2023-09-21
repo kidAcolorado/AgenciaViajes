@@ -2,37 +2,47 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gestor de Agencia de Viajes</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Gestor de Agencia de Viajes</title>
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="/css/bootstrap.min.css">
-<style>
-.reserva-block, .vuelo-block, .pasajero-block {
-	font-size: 14px;
-	margin-bottom: 10px;
-}
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<style>
+		.reserva-block,
+		.vuelo-block,
+		.pasajero-block {
+			font-size: 14px;
+			margin-bottom: 10px;
+		}
 
-.reserva-block h2, .vuelo-block h2, .pasajero-block h2 {
-	font-size: 16px;
-	margin-bottom: 5px;
-}
+		.reserva-block h2,
+		.vuelo-block h2,
+		.pasajero-block h2 {
+			font-size: 16px;
+			margin-bottom: 5px;
+		}
 
-.table td, .table th {
-	padding: 5px 10px;
-}
+		.table td,
+		.table th {
+			padding: 5px 10px;
+		}
 
-/* Estilos para mostrar elementos en una sola línea */
-.inline-table th, .inline-table td {
-	white-space: nowrap;
-	padding-right: 10px;
-}
+		/* Estilos para mostrar elementos en una sola línea */
+		.inline-table th,
+		.inline-table td {
+			white-space: nowrap;
+			padding-right: 10px;
+		}
 
-.actualizar-btn {
-	margin-top: 20px; /* Ajusta el valor según sea necesario */
-}
-</style>
+		
+
+		/* Alinea los botones en línea */
+		.btn-inline {
+			display: inline-block;
+			margin-left: 10px;
+		}
+	</style>
 </head>
 
 <body>
@@ -52,7 +62,7 @@
 					<tbody>
 						<tr>
 							<th>ID:</th>
-							<td th:text="${reserva.id}"></td>
+							<td th:text="${reserva.idReservaDTO}"></td>
 							<th>Asiento:</th>
 							<td th:text="${reserva.asiento}"></td>
 						</tr>
@@ -66,7 +76,7 @@
 					<tbody>
 						<tr>
 							<th>ID Vuelo:</th>
-							<td th:text="${reserva.vueloDTO.id}"></td>
+							<td th:text="${reserva.vueloDTO.idVueloDTO}"></td>
 							<th>Origen:</th>
 							<td th:text="${reserva.vueloDTO.origen}"></td>
 							<th>Destino:</th>
@@ -84,49 +94,52 @@
 					<tbody>
 						<tr>
 							<th>ID Pasajero:</th>
-							<td th:text="${reserva.pasajeroDTO.id}"></td>
+							<td th:text="${reserva.pasajeroDTO.idPasajeroDTO}"></td>
 							<th>Nombre:</th>
 							<td th:text="${reserva.pasajeroDTO.nombre}"></td>
 							<th>Apellido:</th>
 							<td th:text="${reserva.pasajeroDTO.apellido}"></td>
 							<th>Fecha de Nacimiento:</th>
 							<td th:text="${reserva.pasajeroDTO.fechaNacimiento}"></td>
-
-
 						</tr>
 					</tbody>
 				</table>
-				<!-- Botón para mostrar el formulario de actualización -->
-				<button class="btn btn-dark actualizar-btn"
-					onclick="mostrarFormulario()">Actualizar</button>
+				<div style="margin-top: 20px;"></div>
 
+				<!-- Botón para mostrar el formulario de actualización de la reserva -->
+				<button class="btn btn-dark actualizar-btn" onclick="mostrarFormulario()">Actualizar</button>
+
+				<!-- Formulario para borrar la reserva -->
+				<form th:action="@{/reserva/borrar/}" method="post" class="btn-inline">
+					<input type="hidden" name="idReserva" th:value="${reserva.idReservaDTO}" />
+					<button type="submit" class="btn btn-danger">Borrar</button>
+				</form>
 			</div>
 		</div>
 	</div>
+	</div>
 
 	<!-- Formulario de actualización oculto por defecto -->
-	<div class="container mt-4" id="formulario-actualizacion"
-		style="display: none;">
+	<div class="container mt-4" id="formulario-actualizacion" style="display: none;">
 		<h1>Actualizar Reserva</h1>
 		<form th:action="@{/reserva/actualizar/}" method="post">
-			<input type="hidden" name="idReserva" th:value="${reserva.id}" />
+			<input type="hidden" name="idReserva" th:value="${reserva.idReservaDTO}" />
 
 			<div class="mb-3">
-				<label for="idVuelo">ID del Vuelo:</label> <input type="text"
-					class="form-control" id="idVuelo" name="idVuelo"
-					th:value="${reserva.vueloDTO.id}">
+				<label for="idVuelo">ID del Vuelo:</label>
+				<input type="text" class="form-control" id="idVuelo" name="idVuelo"
+					th:value="${reserva.vueloDTO.idVueloDTO}">
 			</div>
 
 			<div class="mb-3">
-				<label for="idPasajero">ID del Pasajero:</label> <input type="text"
-					class="form-control" id="idPasajero" name="idPasajero"
-					th:value="${reserva.pasajeroDTO.id}">
+				<label for="idPasajero">ID del Pasajero:</label>
+				<input type="text" class="form-control" id="idPasajero" name="idPasajero"
+					th:value="${reserva.pasajeroDTO.idPasajeroDTO}">
 			</div>
 
 			<div class="mb-3">
-				<label for="asiento">Asiento:</label> <input type="text"
-					class="form-control" id="asiento" name="asiento"
-					th:value="${reserva.asiento}">
+				<label for="asiento">Asiento:</label>
+				<input type="text" class="form-control" id="asiento" name="asiento" th:value="${reserva.asiento}">
 			</div>
 
 			<button type="submit" class="btn btn-dark">Guardar Cambios</button>

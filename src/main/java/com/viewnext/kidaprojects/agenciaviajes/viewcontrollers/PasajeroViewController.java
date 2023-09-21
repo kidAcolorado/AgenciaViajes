@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTO;
@@ -35,6 +36,8 @@ public class PasajeroViewController {
 		this.pasajeroWebClient = pasajeroWebClient;
 	}
 	
+
+	
 	/**
      * Muestra la vista del formulario para buscar pasajeros.
      *
@@ -53,7 +56,7 @@ public class PasajeroViewController {
 	 * @param model El modelo utilizado para pasar la lista de pasajeros a la vista.
 	 * @return El nombre de la vista a mostrar.
 	 */
-    @GetMapping("/mostrar/")
+    @GetMapping
     public String mostrarVistaListaPasajeros(Model model) {
         try {
             // Realiza una solicitud GET al servicio web para obtener una lista de pasajeros
@@ -85,15 +88,15 @@ public class PasajeroViewController {
 	 * @param model El modelo utilizado para pasar el pasajero a la vista.
 	 * @return El nombre de la vista a mostrar.
 	 */
-	@GetMapping("/mostrar/pasajero")
-	public String mostrarVistaPasajeroById(@ModelAttribute PasajeroDTO pasajeroDTO, Model model) {
+	@GetMapping("/id")
+	public String mostrarVistaPasajeroById(@RequestParam(name = "id") String id, Model model) {
 	    try {
 	        // Obtiene el ID del pasajero del objeto PasajeroDTO recibido como parámetro
-	        Integer id = Integer.parseInt(pasajeroDTO.getIdPasajeroDTO());
+	        Integer idNumerico = Integer.parseInt(id);
 	        
 	        // Realiza una solicitud GET al servicio web para obtener los detalles del pasajero por su ID
 	        PasajeroDTO pasajero = pasajeroWebClient.get()
-	                .uri("/{id}", id)
+	                .uri("/{id}", idNumerico)
 	                .retrieve()
 	                .bodyToMono(PasajeroDTO.class)
 	                .block();
@@ -102,7 +105,7 @@ public class PasajeroViewController {
 	        model.addAttribute("pasajero", pasajero);
 	        
 	        // Retorna el nombre de la vista que mostrará los detalles del pasajero
-	        return "vistaMostrarpasajeroPorId";
+	        return "vistaMostrarPasajeroById";
 	    } catch (NumberFormatException e) {
 	        // En caso de un error de conversión de ID, agrega un mensaje de error al modelo y retorna una vista de error
 	        model.addAttribute(MENSAJE, ID_ERRONEO);

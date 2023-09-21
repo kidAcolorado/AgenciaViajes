@@ -29,7 +29,7 @@
 
 			var url;
 			if (tipoBusqueda === "reserva") {
-				url = "/reserva/mostrar/" + id;
+				url = "/reserva/mostrar/idreserva/" + id;
 			} else if (tipoBusqueda === "vuelo") {
 				url = "/reserva/mostrar/idvuelo/" + id;
 			} else if (tipoBusqueda === "pasajero") {

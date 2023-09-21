@@ -55,22 +55,41 @@ public class ReservaRestController {
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getReservaById(@PathVariable Integer id) {
 	    try {
-	        ReservaDTO reservaDTO;
-
-	        // Llama al servicio para obtener la reserva por su ID
-	        reservaDTO = reservaService.getReservaByid(id);
-
-	        // Retorna una respuesta con la reserva si se encuentra
+	        ReservaDTO reservaDTO = reservaService.getReservaByid(id);
+	          
 	        return ResponseEntity.ok(reservaDTO);
 
 	    } catch (EntityNotFoundException e) {
-	        // En caso de que la reserva no se encuentre, retorna una respuesta con estado Not Found
-	        // y un mensaje de error
+	       
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
 	                .body(RESERVA_NOT_FOUND);
 
 	    }
 	}
+	
+	/**
+	 * Obtiene las reservas por el ID de reserva.
+	 * 
+	 * @param id El ID de la reserva.
+	 * @return ResponseEntity con la lista de ReservaDTO correspondiente a las
+	 *         reservas encontradas, o ResponseEntity con código de estado Not Found si
+	 *         no se encuentra una reserva para el ID de reserva especificado.
+	 */
+	@GetMapping("/mostrar/idreserva/{id}")
+	public ResponseEntity<?> getReservaByIdDesdeFormulario(@PathVariable Integer id) {
+	    try {
+	        ReservaDTO reservaDTO = reservaService.getReservaByid(id);
+	          
+	        return ResponseEntity.ok(reservaDTO);
+
+	    } catch (EntityNotFoundException e) {
+	       
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(RESERVA_NOT_FOUND);
+
+	    }
+	}
+
 
 
 	/**
@@ -81,7 +100,7 @@ public class ReservaRestController {
 	 *         reservas encontradas, o ResponseEntity con código de estado Not Found si
 	 *         no se encuentran reservas para el ID de vuelo especificado.
 	 */
-	@GetMapping("/idvuelo/{id}")
+	@GetMapping("/mostrar/idvuelo/{id}")
 	public ResponseEntity<?> getReservaByIdVuelo(@PathVariable Integer id) {
 	    try {
 	        List<ReservaDTO> listaReservasDTOPorIdVuelo;
@@ -110,7 +129,7 @@ public class ReservaRestController {
 	 *         reservas encontradas, o ResponseEntity con código de estado Not Found si
 	 *         no se encuentran reservas para el ID del pasajero especificado.
 	 */
-	@GetMapping("/idpasajero/{id}")
+	@GetMapping("/mostrar/idpasajero/{id}")
 	public ResponseEntity<?> getReservaByIdPasajero(@PathVariable Integer id) {
 	    try {
 	        List<ReservaDTO> listaReservasDTOPorIdPasajero;
@@ -140,7 +159,7 @@ public class ReservaRestController {
 	 * @return ResponseEntity con el objeto DTO de la reserva creada o un mensaje de
 	 *         error si no se encuentra el vuelo o el pasajero.
 	 */
-	@PostMapping
+	@PostMapping("/crear/params")
 	public ResponseEntity<?> createReservaByIdVueloAndIdPasajeroAsiento(@RequestParam Integer idVuelo,
 			@RequestParam Integer idPasajero, @RequestParam String asiento) {
 

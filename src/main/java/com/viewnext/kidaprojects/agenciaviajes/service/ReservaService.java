@@ -226,7 +226,8 @@ public class ReservaService implements ReservaRepository {
 			List<Reserva> listaReservasPorPasajero;
 			List<ReservaDTO> lisRerservaDTOsPorPasajero;
 
-			String jpql = "SELECT r FROM Reserva r INNER JOIN r.Pasajero p WHERE p.id = :id";
+			String jpql = "SELECT r FROM Reserva r INNER JOIN r.pasajero p WHERE p.idPasajero = :id";
+
 
 			TypedQuery<Reserva> query = entityManager.createQuery(jpql, Reserva.class);
 			query.setParameter("id", id);
@@ -257,7 +258,7 @@ public class ReservaService implements ReservaRepository {
 			List<Reserva> listaReservasPorVuelo;
 			List<ReservaDTO> listaReservaDTOsPorVuelo;
 
-			String jpql = "SELECT r FROM Reserva r INNER JOIN r.Vuelo v WHERE v.id = :id";
+			String jpql = "SELECT r FROM Reserva r INNER JOIN r.vuelo v WHERE v.idVuelo = :id";
 
 			TypedQuery<Reserva> query = entityManager.createQuery(jpql, Reserva.class);
 			query.setParameter("id", id);

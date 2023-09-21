@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Buscar Pasajero</title>
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Buscar Pasajero</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -17,20 +17,19 @@
 	<div class="container mt-4">
 		<h1>Buscar Pasajero</h1>
 		<hr>
-		<form id="formularioBuscarPasajero" action="/pasajero/formbuscar"
-			method="post">
+		<form action="/pasajero/id" method="get">
 			<div class="mb-3">
-				<label for="id" class="form-label">Buscar por ID
-					Pasajero:</label> <input type="number" class="form-control" id="id"
-					name="id" required>
+				<label for="id" class="form-label">Buscar por ID Pasajero:</label>
+				<input type="number" class="form-control" id="id" name="id" required>
 			</div>
 			<button type="submit" class="btn btn-dark">Buscar</button>
 		</form>
+
 	</div>
 
 	<!-- Bootstrap JS -->
 	<script src="/js/bootstrap.bundle.min.js"></script>
-	
+
 </body>
 
 </html>
