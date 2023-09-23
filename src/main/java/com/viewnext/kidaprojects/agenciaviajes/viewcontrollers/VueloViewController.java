@@ -53,6 +53,18 @@ public class VueloViewController {
     public String mostrarFormularioBusquedaVuelo(Model model) {
         return "formularioBuscarVuelo";
     }
+    
+    /**
+     * Muestra la vista del formulario para crear un nuevo vuelo.
+     *
+     * @param model El modelo utilizado para pasar un objeto VueloDTO vacío a la vista.
+     * @return El nombre de la vista a mostrar.
+     */
+    @GetMapping("/formcrear")
+    public String mostrarFormularioCrearVuelo(Model model) {
+        model.addAttribute("vueloDTOSinId", new VueloDTOSinId());
+        return "formularioCrearVuelo";
+    }
 
     /**
      * Obtiene una lista de vuelos desde el servicio web y muestra la vista que
@@ -139,17 +151,7 @@ public class VueloViewController {
         }
 	 }
 
-    /**
-     * Muestra la vista del formulario para crear un nuevo vuelo.
-     *
-     * @param model El modelo utilizado para pasar un objeto VueloDTO vacío a la vista.
-     * @return El nombre de la vista a mostrar.
-     */
-    @GetMapping("/formcrear")
-    public String mostrarFormularioCrearVuelo(Model model) {
-        model.addAttribute("vueloDTOSinId", new VueloDTOSinId());
-        return "formularioCrearVuelo";
-    }
+   
 
     /**
      * Crea un nuevo vuelo utilizando el servicio web de vuelos.
@@ -193,7 +195,7 @@ public class VueloViewController {
     public String borrarVuelo(@RequestParam("idVueloDTO") String idVueloDTO, Model model) {
         try {
             
-        	System.out.println(idVueloDTO);
+        	
 
             ResponseEntity<Void> response = vueloWebClient.delete()
                     .uri("/{id}", idVueloDTO)

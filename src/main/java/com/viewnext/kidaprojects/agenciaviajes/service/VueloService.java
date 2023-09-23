@@ -1,7 +1,6 @@
 package com.viewnext.kidaprojects.agenciaviajes.service;
 
 import java.sql.Date;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -16,7 +15,6 @@ import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTOSinId;
 import com.viewnext.kidaprojects.agenciaviajes.mappers.VueloMapper;
 import com.viewnext.kidaprojects.agenciaviajes.model.Vuelo;
 import com.viewnext.kidaprojects.agenciaviajes.repository.VueloRepository;
-
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
@@ -31,7 +29,10 @@ public class VueloService implements VueloRepository {
 		this.vueloMapper = vueloMapper;
 	}
 
-	// MÉTODOS IMPLEMENTADOS:
+	// -----------------------------------------------------
+	// ------ MÉTODOS PARA BUSCAR Y MANDAR RESULTADOS ------
+	// -----------------------------------------------------
+
 	/**
 	 * Recupera todos los vuelos de la base de datos.
 	 *
@@ -44,79 +45,6 @@ public class VueloService implements VueloRepository {
 		listaVuelos = vueloRepository.findAll();
 
 		return listaVuelos;
-	}
-
-	/**
-	 * Guarda un vuelo en la base de datos. Puede utilizarse para crear un nuevo
-	 * vuelo o actualizar uno existente.
-	 *
-	 * @param entity el vuelo a guardar.
-	 * @return el vuelo guardado.
-	 */
-	@Override
-	public <S extends Vuelo> S save(S entity) {
-
-		vueloRepository.save(entity);
-
-		return entity;
-	}
-
-	/**
-	 * Busca un vuelo por su identificador (ID).
-	 *
-	 * @param id el identificador del vuelo.
-	 * @return un Optional que contiene el vuelo encontrado, o un Optional vacío si
-	 *         no se encuentra el vuelo.
-	 */
-	@Override
-	public Optional<Vuelo> findById(Integer id) {
-
-		return vueloRepository.findById(id);
-	}
-
-	/**
-	 * Elimina un vuelo de la base de datos por su identificador (ID).
-	 *
-	 * @param id el identificador del vuelo a eliminar.
-	 */
-	@Override
-	public void deleteById(Integer id) {
-
-		vueloRepository.deleteById(id);
-	}
-
-	/**
-	 * Elimina un vuelo de la base de datos.
-	 *
-	 * @param entity el vuelo a eliminar.
-	 */
-	@Override
-	public void delete(Vuelo entity) {
-
-		vueloRepository.delete(entity);
-
-	}
-
-	/**
-	 * Filtra una lista de vuelos según el origen, destino y fecha especificados.
-	 *
-	 * @param ciudadOrigen  La ciudad de origen de los vuelos a filtrar.
-	 * @param ciudadDestino La ciudad de destino de los vuelos a filtrar.
-	 * @param fecha         La fecha de los vuelos a filtrar.
-	 * @param listaVuelos   La lista de vuelos a filtrar.
-	 * @return Una lista de vuelos filtrados por origen, destino y fecha.
-	 */
-	public List<Vuelo> findVuelosByOrigenDestinoFecha(String ciudadOrigen, String ciudadDestino, Date fecha,
-			List<Vuelo> listaVuelos) {
-		List<Vuelo> listaVuelosFiltradaPorOrigenDestinoFecha;
-
-		listaVuelosFiltradaPorOrigenDestinoFecha = listaVuelos.stream()
-				.filter(vuelo -> vuelo.getOrigen().equalsIgnoreCase(ciudadOrigen))
-				.filter(vuelo -> vuelo.getDestino().equalsIgnoreCase(ciudadDestino))
-				.filter(vuelo -> vuelo.getFecha().equals(fecha))
-				.toList();
-
-		return listaVuelosFiltradaPorOrigenDestinoFecha;
 	}
 
 	/**
@@ -136,24 +64,16 @@ public class VueloService implements VueloRepository {
 	}
 
 	/**
-	 * Crea un nuevo vuelo.
+	 * Busca un vuelo por su identificador (ID).
 	 *
-	 * @param vueloDTO Objeto VueloDTO que representa los datos del nuevo vuelo a
-	 *                 crear.
-	 * @return Objeto VueloDTO que representa el vuelo creado.
+	 * @param id el identificador del vuelo.
+	 * @return un Optional que contiene el vuelo encontrado, o un Optional vacío si
+	 *         no se encuentra el vuelo.
 	 */
-	public VueloDTO createVuelo(VueloDTOSinId vueloDTOSinId) {
-		Vuelo vueloParaIntroducir;
-		Vuelo vueloIntroducidoEnBaseDeDatos;
-		VueloDTO nuevoVueloDTO;
+	@Override
+	public Optional<Vuelo> findById(Integer id) {
 
-		vueloParaIntroducir = vueloMapper.toVuelo(vueloDTOSinId);
-
-		vueloIntroducidoEnBaseDeDatos = save(vueloParaIntroducir);
-
-		nuevoVueloDTO = vueloMapper.toVueloDTO(vueloIntroducidoEnBaseDeDatos);
-
-		return nuevoVueloDTO;
+		return vueloRepository.findById(id);
 	}
 
 	/**
@@ -173,16 +93,122 @@ public class VueloService implements VueloRepository {
 			throw new EntityNotFoundException();
 		}
 	}
-	
+
 	/**
-	 * Comprueba si existe un vuelo con el identificador (ID) proporcionado en la base de datos.
+	 * 
+	 * Busca vuelos por origen, destino y fecha.
+	 * 
+	 * @param origen  El origen del vuelo.
+	 * @param destino El destino del vuelo.
+	 * @param fecha   La fecha del vuelo.
+	 * @return La lista de vuelos filtrada por origen, destino y fecha.
+	 * @throws EntityNotFoundException Si no se encuentran vuelos con los criterios
+	 *                                 especificados.
+	 */
+	public List<VueloDTO> buscarVuelosPorOrigenDestinoFecha(String origen, String destino, Date fecha)
+			throws EntityNotFoundException {
+		List<Vuelo> listaVuelosSinFiltrar;
+		List<Vuelo> listaVuelosFiltrada;
+		List<VueloDTO> listaVuelosDTOFiltrada;
+
+		// Obtener todos los vuelos
+		listaVuelosSinFiltrar = findAll();
+
+		// Filtrar vuelos por origen, destino y fecha
+		listaVuelosFiltrada = findVuelosByOrigenDestinoFecha(origen, destino, fecha, listaVuelosSinFiltrar);
+
+		// Mapeamos a lista de DTOs
+		listaVuelosDTOFiltrada = vueloMapper.toVueloDTOList(listaVuelosFiltrada);
+
+		// Verificar si se encontraron coincidencias
+		if (listaVuelosDTOFiltrada.isEmpty()) {
+			throw new EntityNotFoundException();
+		}
+
+		// Devolver la lista de vuelos filtrados
+		return listaVuelosDTOFiltrada;
+	}
+
+	/**
+	 * Filtra una lista de vuelos según el origen, destino y fecha especificados.
+	 *
+	 * @param ciudadOrigen  La ciudad de origen de los vuelos a filtrar.
+	 * @param ciudadDestino La ciudad de destino de los vuelos a filtrar.
+	 * @param fecha         La fecha de los vuelos a filtrar.
+	 * @param listaVuelos   La lista de vuelos a filtrar.
+	 * @return Una lista de vuelos filtrados por origen, destino y fecha.
+	 */
+	public List<Vuelo> findVuelosByOrigenDestinoFecha(String ciudadOrigen, String ciudadDestino, Date fecha,
+			List<Vuelo> listaVuelos) {
+		List<Vuelo> listaVuelosFiltradaPorOrigenDestinoFecha;
+
+		listaVuelosFiltradaPorOrigenDestinoFecha = listaVuelos.stream()
+				.filter(vuelo -> vuelo.getOrigen().equalsIgnoreCase(ciudadOrigen))
+				.filter(vuelo -> vuelo.getDestino().equalsIgnoreCase(ciudadDestino))
+				.filter(vuelo -> vuelo.getFecha().equals(fecha)).toList();
+
+		return listaVuelosFiltradaPorOrigenDestinoFecha;
+	}
+
+	// -----------------------------------------------------
+	// ---------------- MÉTODOS PARA CREAR -----------------
+	// -----------------------------------------------------
+
+	/**
+	 * Guarda un vuelo en la base de datos. Puede utilizarse para crear un nuevo
+	 * vuelo o actualizar uno existente.
+	 *
+	 * @param entity el vuelo a guardar.
+	 * @return el vuelo guardado.
+	 */
+	@Override
+	public <S extends Vuelo> S save(S entity) {
+
+		vueloRepository.save(entity);
+
+		return entity;
+	}
+
+	/**
+	 * Crea un nuevo vuelo.
+	 *
+	 * @param vueloDTO Objeto VueloDTO que representa los datos del nuevo vuelo a
+	 *                 crear.
+	 * @return Objeto VueloDTO que representa el vuelo creado.
+	 */
+	public VueloDTO createVuelo(VueloDTOSinId vueloDTOSinId) {
+
+		Vuelo vuelo = vueloMapper.toVuelo(vueloDTOSinId);
+
+		return vueloMapper.toVueloDTO(save(vuelo));
+	}
+
+	// -----------------------------------------------------
+	// --------------- MÉTODOS PARA BORRAR -----------------
+	// -----------------------------------------------------
+
+	/**
+	 * Comprueba si existe un vuelo con el identificador (ID) proporcionado en la
+	 * base de datos.
 	 *
 	 * @param id El ID del vuelo que se va a buscar.
-	 * @return true si existe un vuelo con el ID proporcionado, false si no se encuentra ningún vuelo con ese ID.
+	 * @return true si existe un vuelo con el ID proporcionado, false si no se
+	 *         encuentra ningún vuelo con ese ID.
 	 */
 	@Override
 	public boolean existsById(Integer id) {
-	    return vueloRepository.existsById(id);
+		return vueloRepository.existsById(id);
+	}
+
+	/**
+	 * Elimina un vuelo de la base de datos por su identificador (ID).
+	 *
+	 * @param id el identificador del vuelo a eliminar.
+	 */
+	@Override
+	public void deleteById(Integer id) {
+
+		vueloRepository.deleteById(id);
 	}
 
 	/**
@@ -199,6 +225,33 @@ public class VueloService implements VueloRepository {
 
 		deleteById(id);
 	}
+
+	/**
+	 * Elimina un vuelo de la base de datos.
+	 *
+	 * @param entity el vuelo a eliminar.
+	 */
+	@Override
+	public void delete(Vuelo entity) {
+
+		vueloRepository.delete(entity);
+
+	}
+
+	/**
+	 * Elimina un vuelo de la base de datos.
+	 *
+	 * @param vueloDTO el DTO del vuelo a eliminar.
+	 */
+	public void delete(VueloDTO vueloDTO) {
+		Vuelo vuelo = vueloMapper.toVuelo(vueloDTO);
+
+		delete(vuelo);
+	}
+
+	// -----------------------------------------------------
+	// --------------- MÉTODOS PARA UPDATE -----------------
+	// -----------------------------------------------------
 
 	/**
 	 * 
@@ -224,7 +277,7 @@ public class VueloService implements VueloRepository {
 
 		vuelo = vueloMapper.toVuelo(vueloDTO);
 		vuelo.setIdVuelo(id);// Esta línea podría ser útil, por si en un fúturo el DTO no viene con el id del
-						// vuelo que queremos actualizar
+		// vuelo que queremos actualizar
 
 		// Guardar el vuelo actualizado en la base de datos
 		vueloActualizado = save(vuelo);
@@ -234,52 +287,13 @@ public class VueloService implements VueloRepository {
 
 		return vueloDTOActualizado;
 	}
-	
-	
 
-	/**
-	 * 
-	 * Busca vuelos por origen, destino y fecha.
-	 * @param origen  El origen del vuelo.
-	 * @param destino El destino del vuelo.
-	 * @param fecha   La fecha del vuelo.
-	 * @return La lista de vuelos filtrada por origen, destino y fecha.
-	 * @throws EntityNotFoundException Si no se encuentran vuelos con los criterios
-	 *                                 especificados.
-	 */
-	public List<VueloDTO> buscarVuelosPorOrigenDestinoFecha(String origen, String destino, Date fecha)
-			throws EntityNotFoundException {
-		List<Vuelo> listaVuelosSinFiltrar;
-		List<Vuelo> listaVuelosFiltradaPorOrigenDestinoFecha;
-		List<VueloDTO> listaVuelosDTOFiltradaPorOrigenDestinoFecha;
-
-		// Obtener todos los vuelos
-		listaVuelosSinFiltrar = findAll();
-
-		// Filtrar vuelos por origen, destino y fecha
-		listaVuelosFiltradaPorOrigenDestinoFecha = findVuelosByOrigenDestinoFecha(origen, destino, fecha, listaVuelosSinFiltrar);
-
-		// Mapeamos a lista de DTOs
-		listaVuelosDTOFiltradaPorOrigenDestinoFecha = vueloMapper
-				.toVueloDTOList(listaVuelosFiltradaPorOrigenDestinoFecha);
-
-		// Verificar si se encontraron coincidencias
-		if (listaVuelosDTOFiltradaPorOrigenDestinoFecha.isEmpty()) {
-			throw new EntityNotFoundException();
-		}
-
-		// Devolver la lista de vuelos filtrados
-		return listaVuelosDTOFiltradaPorOrigenDestinoFecha;
-	}
-	
-	
-	
 	// MÉTODOS POR IMPLEMENTAR EN UN FÚTURO:
 
 	@Override
 	public void flush() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -297,19 +311,19 @@ public class VueloService implements VueloRepository {
 	@Override
 	public void deleteAllInBatch(Iterable<Vuelo> entities) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteAllByIdInBatch(Iterable<Integer> ids) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteAllInBatch() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -363,19 +377,19 @@ public class VueloService implements VueloRepository {
 	@Override
 	public void deleteAllById(Iterable<? extends Integer> ids) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteAll(Iterable<? extends Vuelo> entities) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteAll() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -419,15 +433,5 @@ public class VueloService implements VueloRepository {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
-
-	
-	
-
-
-
-
-
 
 }

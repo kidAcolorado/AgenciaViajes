@@ -51,6 +51,18 @@ public class PasajeroViewController {
         
         return "formularioBuscarPasajero";
     }
+    
+    /**
+     * Muestra la vista del formulario para crear un nuevo pasajero.
+     *
+     * @param model El modelo utilizado para pasar un objeto PasajeroDTO vacío a la vista.
+     * @return El nombre de la vista a mostrar.
+     */
+    @GetMapping("/formcrear")
+    public String mostrarFormularioCrearPasajero(Model model) {
+        model.addAttribute("pasajeroDTOSinId", new PasajeroDTOSinId());
+        return "formularioCrearPasajero";
+    }
 
 	/**
 	 * Obtiene una lista de pasajeros desde el servicio web y muestra la vista que lista todos los pasajeros.
@@ -93,12 +105,12 @@ public class PasajeroViewController {
 	@GetMapping("/id")
 	public String mostrarVistaPasajeroById(@RequestParam(name = "id") String id, Model model) {
 	    try {
-	        // Obtiene el ID del pasajero del objeto PasajeroDTO recibido como parámetro
-	        Integer idNumerico = Integer.parseInt(id);
+	        
+	        
 	        
 	        // Realiza una solicitud GET al servicio web para obtener los detalles del pasajero por su ID
 	        PasajeroDTO pasajero = pasajeroWebClient.get()
-	                .uri("/{id}", idNumerico)
+	                .uri("/{id}", id)
 	                .retrieve()
 	                .bodyToMono(PasajeroDTO.class)
 	                .block();
@@ -108,10 +120,7 @@ public class PasajeroViewController {
 	        
 	        // Retorna el nombre de la vista que mostrará los detalles del pasajero
 	        return "vistaMostrarPasajeroById";
-	    } catch (NumberFormatException e) {
-	        // En caso de un error de conversión de ID, agrega un mensaje de error al modelo y retorna una vista de error
-	        model.addAttribute(MENSAJE, ID_ERRONEO);
-	        return VISTA_ERROR;
+	    
 	    } catch (WebClientResponseException e) {
 	        // En caso de un error al comunicarse con el servicio web, agrega un mensaje de error al modelo y retorna una vista de error
 	        model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
@@ -121,17 +130,7 @@ public class PasajeroViewController {
 
 
     
-    /**
-     * Muestra la vista del formulario para crear un nuevo pasajero.
-     *
-     * @param model El modelo utilizado para pasar un objeto PasajeroDTO vacío a la vista.
-     * @return El nombre de la vista a mostrar.
-     */
-    @GetMapping("/formcrear")
-    public String mostrarFormularioCrearPasajero(Model model) {
-        model.addAttribute("pasajeroDTOSinId", new PasajeroDTOSinId());
-        return "formularioCrearPasajero";
-    }
+    
 
 	/**
 	 * Crea un nuevo pasajero utilizando el servicio web de pasajeros.
@@ -195,9 +194,7 @@ public class PasajeroViewController {
 	            model.addAttribute(MENSAJE, "Error al borrar el Pasajero");
 	            return VISTA_ERROR; // Maneja otros errores posibles
 	        }
-	    } catch (NumberFormatException e) {
-	        model.addAttribute(MENSAJE, ID_ERRONEO);
-	        return VISTA_ERROR;
+	   
 	    } catch (WebClientResponseException e) {
 	        model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
 	        return VISTA_ERROR;

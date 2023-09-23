@@ -30,6 +30,7 @@ public class VueloRestController {
 	private VueloService vueloService;
 
 	private static final String VUELO_NOT_FOUND = "Vuelo con las características indicadas no encontrado";
+	private static final String INVALID_ID = "Id Proporcionado inválido";
 
 	/**
 	 * Obtiene todos los vuelos disponibles.
@@ -47,6 +48,33 @@ public class VueloRestController {
 	}
 
 	/**
+	 * Obtiene un vuelo por su ID.
+	 *
+	 * @param id El ID del vuelo a buscar.
+	 * @return ResponseEntity con el objeto VueloDTO si se encuentra el vuelo, o
+	 *         ResponseEntity con código de estado Not Found y un mensaje de error
+	 *         si no se encuentra.
+	 */
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getVueloById(@PathVariable String id) {
+		try {
+			Integer idNumerico = Integer.parseInt(id);
+
+			VueloDTO vueloDTO = vueloService.getVueloById(idNumerico);
+
+			return ResponseEntity.ok(vueloDTO);
+
+		} catch (EntityNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(VUELO_NOT_FOUND);
+
+		} catch (NumberFormatException e) {
+			// En caso de que la conversión falle, responde con un código de estado 400 Bad
+			// Request
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(INVALID_ID);
+		}
+	}
+
+	/**
 	 * Busca vuelos por origen, destino y fecha y devuelve una lista de vuelos
 	 * filtrada.
 	 *
@@ -59,42 +87,20 @@ public class VueloRestController {
 	 */
 	@GetMapping("/buscar")
 	public ResponseEntity<?> buscarVuelosPorOrigenDestinoFecha(@RequestParam("origen") String origen,
-	        @RequestParam("destino") String destino, @RequestParam("fecha") Date fecha) {
-	    try {
-	        // Llama al servicio para buscar vuelos por origen, destino y fecha
-	        List<VueloDTO> listaVuelosDTOFiltrada = vueloService.buscarVuelosPorOrigenDestinoFecha(origen, destino, fecha);
-
-	        // Si se encuentran coincidencias, devuelve una respuesta con status 200 (OK)
-	        // y la lista de vuelos filtrada
-	        return ResponseEntity.ok(listaVuelosDTOFiltrada);
-
-	    } catch (EntityNotFoundException e) {
-	        // En caso de que no se encuentren vuelos que coincidan, devuelve una respuesta
-	        // 404 Not Found con un mensaje de error
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                .body(VUELO_NOT_FOUND);
-	    }
-	}
-
-
-	/**
-	 * Obtiene un vuelo por su ID.
-	 *
-	 * @param id El ID del vuelo a buscar.
-	 * @return ResponseEntity con el objeto VueloDTO si se encuentra el vuelo, o
-	 *         ResponseEntity con código de estado Not Found y un mensaje de error
-	 *         si no se encuentra.
-	 */
-	@GetMapping("/{id}")
-	public ResponseEntity<?> getVueloById(@PathVariable Integer id) {
+			@RequestParam("destino") String destino, @RequestParam("fecha") Date fecha) {
 		try {
-			VueloDTO vueloDTO = vueloService.getVueloById(id);
+			// Llama al servicio para buscar vuelos por origen, destino y fecha
+			List<VueloDTO> listaVuelosDTOFiltrada = vueloService.buscarVuelosPorOrigenDestinoFecha(origen, destino,
+					fecha);
 
-			return ResponseEntity.ok(vueloDTO);
+			// Si se encuentran coincidencias, devuelve una respuesta con status 200 (OK)
+			// y la lista de vuelos filtrada
+			return ResponseEntity.ok(listaVuelosDTOFiltrada);
 
 		} catch (EntityNotFoundException e) {
+			// En caso de que no se encuentren vuelos que coincidan, devuelve una respuesta
+			// 404 Not Found con un mensaje de error
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(VUELO_NOT_FOUND);
-
 		}
 	}
 
@@ -119,23 +125,30 @@ public class VueloRestController {
 	 * Elimina un vuelo por su ID.
 	 *
 	 * @param id ID del vuelo a eliminar.
-	 * @return ResponseEntity con un mensaje de éxito si el vuelo se eliminó correctamente, o ResponseEntity
-	 *         con estado 404 (No encontrado) y un mensaje de error si el vuelo no existe.
+	 * @return ResponseEntity con un mensaje de éxito si el vuelo se eliminó
+	 *         correctamente, o ResponseEntity con estado 404 (No encontrado) y un
+	 *         mensaje de error si el vuelo no existe.
 	 */
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteVueloById(@PathVariable Integer id) {
-	    try {
-	        // Llama al servicio para eliminar el vuelo por su ID
-	        vueloService.deleteVueloById(id);
+	public ResponseEntity<String> deleteVueloById(@PathVariable String id) {
+		try {
+			// Intentar convertir el id de String a int
+			Integer idNumerico = Integer.parseInt(id);
+			// Llama al servicio para eliminar el vuelo por su ID
+			vueloService.deleteVueloById(idNumerico);
 
-	        // Devuelve una respuesta sin contenido (204 No Content) para indicar éxito en la eliminación
-	        return ResponseEntity.noContent().build();
-	    } catch (EntityNotFoundException e) {
-	        // En caso de que el vuelo no se encuentre, devuelve una respuesta 404 Not Found
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(VUELO_NOT_FOUND);
-	    }
+			// Devuelve una respuesta sin contenido (204 No Content) para indicar éxito en
+			// la eliminación
+			return ResponseEntity.noContent().build();
+		} catch (EntityNotFoundException e) {
+			// En caso de que el vuelo no se encuentre, devuelve una respuesta 404 Not Found
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(VUELO_NOT_FOUND);
+		} catch (NumberFormatException e) {
+			// En caso de que la conversión falle, responde con un código de estado 400 Bad
+			// Request
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(INVALID_ID);
+		}
 	}
-
 
 	/**
 	 * Actualiza los datos de un vuelo existente en la base de datos utilizando el
@@ -149,18 +162,23 @@ public class VueloRestController {
 	 */
 	@PutMapping
 	public ResponseEntity<?> updateVueloById(@RequestBody VueloDTO vueloDTO) {
-	    try {
-	    	
-	    	Integer idNumerico = Integer.parseInt(vueloDTO.getIdVueloDTO());
-	        // Llama al servicio para actualizar los datos del vuelo por su ID
-	        vueloService.updateVueloById(idNumerico, vueloDTO);
+		try {
 
-	        // Devuelve una respuesta con status 200 (OK) y el objeto DTO del vuelo actualizado
-	        return ResponseEntity.ok(vueloDTO);
-	    } catch (EntityNotFoundException e) {
-	        // En caso de que el vuelo no se encuentre, devuelve una respuesta 404 Not Found
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(VUELO_NOT_FOUND);
-	    }
+			Integer idNumerico = Integer.parseInt(vueloDTO.getIdVueloDTO());
+			// Llama al servicio para actualizar los datos del vuelo por su ID
+			vueloService.updateVueloById(idNumerico, vueloDTO);
+
+			// Devuelve una respuesta con status 200 (OK) y el objeto DTO del vuelo
+			// actualizado
+			return ResponseEntity.ok(vueloDTO);
+		} catch (NumberFormatException e) {
+			// En caso de que la conversión falle, responde con un código de estado 400 Bad
+			// Request
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(INVALID_ID);
+		} catch (EntityNotFoundException e) {
+			// En caso de que el vuelo no se encuentre, devuelve una respuesta 404 Not Found
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(VUELO_NOT_FOUND);
+		}
 	}
 
 }

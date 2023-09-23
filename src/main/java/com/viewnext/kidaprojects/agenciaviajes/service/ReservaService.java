@@ -1,7 +1,5 @@
 package com.viewnext.kidaprojects.agenciaviajes.service;
 
-
-import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -10,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
+
 import org.springframework.stereotype.Service;
 import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTO;
 import com.viewnext.kidaprojects.agenciaviajes.dto.ReservaDTO;
@@ -55,7 +50,10 @@ public class ReservaService implements ReservaRepository {
 		this.pasajeroMapper = pasajeroMapper;
 	}
 
-	// MÉTODOS IMPLEMENTADOS:
+	// -----------------------------------------------------
+	// ------ METODOS PARA BUSCAR Y MANDAR RESULTADOS ------
+	// -----------------------------------------------------
+
 	/**
 	 * Recupera todas las reservas de la base de datos.
 	 *
@@ -68,61 +66,6 @@ public class ReservaService implements ReservaRepository {
 		listaReservas = reservaRepository.findAll();
 
 		return listaReservas;
-	}
-
-	/**
-	 * Guarda una reserva en la base de datos.
-	 *
-	 * @param entity la reserva a guardar.
-	 * @return la reserva guardada.
-	 */
-	@Override
-	public <S extends Reserva> S save(S entity) {
-
-		reservaRepository.save(entity);
-
-		return reservaRepository.save(entity);
-	}
-
-	/**
-	 * Busca una reserva por su identificador (ID).
-	 *
-	 * @param id el identificador de la reserva a buscar.
-	 * @return un Optional que contiene la reserva encontrada o un valor vacío si no
-	 *         se encuentra.
-	 */
-	@Override
-	public Optional<Reserva> findById(Integer id) {
-
-		return reservaRepository.findById(id);
-	}
-
-	/**
-	 * Elimina una reserva de la base de datos utilizando su identificador (ID).
-	 *
-	 * @param id el identificador de la reserva a eliminar.
-	 */
-	@Override
-	public void deleteById(Integer id) {
-
-		reservaRepository.deleteById(id);
-	}
-
-	/**
-	 * Elimina una reserva de la base de datos.
-	 *
-	 * @param entity la reserva a eliminar.
-	 */
-	@Override
-	public void delete(Reserva entity) {
-
-		reservaRepository.delete(entity);
-	}
-	
-	public void delete(ReservaDTO reservaDTO) {
-		Reserva reserva = reservaMapper.toReserva(reservaDTO);
-		
-		delete(reserva);
 	}
 
 	/**
@@ -140,6 +83,20 @@ public class ReservaService implements ReservaRepository {
 		listaReservasDTO = reservaMapper.toReservaDTOList(listaReservas);
 
 		return listaReservasDTO;
+	}
+
+	/**
+	 * Busca y recupera una entidad de tipo Reserva de la base de datos utilizando
+	 * su identificador (ID).
+	 * 
+	 * @param id el identificador de la reserva a buscar.
+	 * @return un Optional que contiene la reserva encontrada o un Optional vacío si
+	 *         no se encontró ninguna entidad con el ID proporcionado.
+	 */
+	@Override
+	public Optional<Reserva> findById(Integer id) {
+
+		return reservaRepository.findById(id);
 	}
 
 	/**
@@ -161,71 +118,6 @@ public class ReservaService implements ReservaRepository {
 	}
 
 	/**
-	 * Comprueba si existe una reserva con el identificador (ID) proporcionado en el
-	 * repositorio de reservas.
-	 *
-	 * @param id El ID de la reserva que se va a buscar.
-	 * @return true si existe una reserva con el ID proporcionado, false si no se
-	 *         encuentra ninguna reserva con ese ID.
-	 */
-	@Override
-	public boolean existsById(Integer id) {
-		return reservaRepository.existsById(id);
-	}
-
-	/**
-	 * Elimina una reserva por su ID.
-	 * 
-	 * @param id El ID de la reserva a eliminar.
-	 * @throws EntityNotFoundException si no se encuentra la reserva con el ID
-	 *                                 especificado.
-	 */
-	public void deleteReservaById(Integer id) throws EntityNotFoundException {
-		if (!existsById(id)) {
-			throw new EntityNotFoundException();
-		}
-
-		deleteById(id);
-	}
-
-	/**
-	 * Actualiza una reserva por su ID utilizando los datos proporcionados en el
-	 * objeto ReservaDTO.
-	 * 
-	 * @param id         El ID de la reserva a actualizar.
-	 * @param reservaDTO El objeto ReservaDTO con los datos actualizados.
-	 * @return El objeto ReservaDTO correspondiente a la reserva actualizada.
-	 * @throws EntityNotFoundException si no se encuentra la reserva con el ID
-	 *                                 especificado.
-	 */
-	public ReservaDTO updateReservaById(Integer id, ReservaDTO reservaDTO) {
-		// Verificar si la reserva con la ID especificada existe en la base de datos
-		Optional<Reserva> optionalReserva = findById(id);
-		if (optionalReserva.isEmpty()) {
-			throw new EntityNotFoundException();
-		}
-
-		// Cuerpo del método en caso de que existe la Reserva:
-		Reserva reserva;
-		Reserva reservaActualizada;
-		ReservaDTO reservaDTOActualizada;
-
-		// Actualizar los datos de la reserva con los valores recibidos en el DTO
-		reserva = reservaMapper.toReserva(reservaDTO);
-		reserva.setIdReserva(id);
-		// Esta línea podría ser útil, por si en un futuro el DTO no viene con el id
-		// de la reserva que queremos actualizar
-
-		// Guardar la reserva actualizada en la base de datos
-		reservaActualizada = save(reserva);
-
-		// Mapear la reserva actualizada a un DTO y devolverlo en la respuesta
-		reservaDTOActualizada = reservaMapper.toReservaDTO(reservaActualizada);
-
-		return reservaDTOActualizada;
-	}
-
-	/**
 	 * Obtiene una lista de ReservaDTO correspondientes a las reservas realizadas
 	 * por un pasajero.
 	 * 
@@ -238,7 +130,6 @@ public class ReservaService implements ReservaRepository {
 			List<ReservaDTO> lisRerservaDTOsPorPasajero;
 
 			String jpql = "SELECT r FROM Reserva r INNER JOIN r.pasajero p WHERE p.idPasajero = :id";
-
 
 			TypedQuery<Reserva> query = entityManager.createQuery(jpql, Reserva.class);
 			query.setParameter("id", id);
@@ -287,37 +178,25 @@ public class ReservaService implements ReservaRepository {
 			return Collections.emptyList(); // Por ejemplo, retornar una lista vacía en caso de error
 		}
 	}
-	
+
+	// -----------------------------------------------------
+	// ---------------- MÉTODOS PARA CREAR -----------------
+	// -----------------------------------------------------
+
 	/**
-	 * Obtiene una reserva por su ID de vuelo, ID de pasajero y número de asiento.
-	 * 
-	 * @param idVuelo    El ID del vuelo asociado a la reserva.
-	 * @param idPasajero El ID del pasajero asociado a la reserva.
-	 * @param asiento    El número de asiento seleccionado para la reserva.
-	 * @return El objeto ReservaDTO correspondiente a la reserva encontrada.
-	 * @throws EntityNotFoundException Si el vuelo, el pasajero o la reserva no se encuentran.
+	 * Guarda una reserva en la base de datos.
+	 *
+	 * @param entity la reserva a guardar.
+	 * @return la reserva guardada.
 	 */
-	public ReservaDTO getReservaByIdVueloIdPasajeroAsiento(Integer idVuelo, Integer idPasajero, String asiento)
-	        throws EntityNotFoundException {
-	    Optional<Vuelo> optionalVuelo;
-	    Optional<Pasajero> optionalPasajero;
+	@Override
+	public <S extends Reserva> S save(S entity) {
 
-	    // Buscar el vuelo y el pasajero por sus respectivos IDs
-	    optionalVuelo = vueloService.findById(idVuelo);
-	    optionalPasajero = pasajeroService.findById(idPasajero);
+		reservaRepository.save(entity);
 
-	    if (optionalVuelo.isPresent() && optionalPasajero.isPresent()) {
-	        // Obtener la ReservaDTO llamando a otro método
-	        return getReservaDTOByOptionalsAndAsiento(optionalVuelo, optionalPasajero, asiento);
-	    } else {
-	        // Lanzar una excepción si alguno de los elementos no se encuentra
-	        throw new EntityNotFoundException();
-	    }
+		return reservaRepository.save(entity);
 	}
 
-
-	// MÉTODO PARA CREAR LA RESERVA: (Compuesto por este método que invoca a otros
-	// dos: getReservaDTOByOptionalsAndAsiento y createReservaByReservaDTO)
 	/**
 	 * Crea una reserva para un vuelo y pasajero específicos, con el asiento
 	 * especificado.
@@ -332,20 +211,126 @@ public class ReservaService implements ReservaRepository {
 			throws EntityNotFoundException {
 		Optional<Vuelo> optionalVuelo = vueloService.findById(idPasajero);
 		Optional<Pasajero> optionalPasajero = pasajeroService.findById(idPasajero);
-		
+
 		if (optionalPasajero.isPresent() && optionalVuelo.isPresent()) {
-		    Pasajero pasajero = optionalPasajero.get();
-		    Vuelo vuelo = optionalVuelo.get();
-		    Reserva reserva = new Reserva(asiento, vuelo, pasajero);
-		    
-		    ReservaDTO reservaDTO = reservaMapper.toReservaDTO(save(reserva));
-		    		       
-		    return reservaDTO;
+			Pasajero pasajero = optionalPasajero.get();
+			Vuelo vuelo = optionalVuelo.get();
+			Reserva reserva = new Reserva(asiento, vuelo, pasajero);
+
+			return reservaMapper.toReservaDTO(save(reserva));
 		} else {
 			throw new EntityNotFoundException();
 		}
-		
+
 	}
+
+	// -----------------------------------------------------
+	// --------------- MÉTODOS PARA BORRAR -----------------
+	// -----------------------------------------------------
+
+	/**
+	 * Comprueba si existe una reserva con el identificador (ID) proporcionado en el
+	 * repositorio de reservas.
+	 *
+	 * @param id El ID de la reserva que se va a buscar.
+	 * @return true si existe una reserva con el ID proporcionado, false si no se
+	 *         encuentra ninguna reserva con ese ID.
+	 */
+	@Override
+	public boolean existsById(Integer id) {
+		return reservaRepository.existsById(id);
+	}
+
+	/**
+	 * Elimina una reserva de la base de datos utilizando su identificador (ID).
+	 *
+	 * @param id el identificador de la reserva a eliminar.
+	 */
+	@Override
+	public void deleteById(Integer id) {
+
+		reservaRepository.deleteById(id);
+	}
+
+	/**
+	 * Elimina una reserva por su ID.
+	 * 
+	 * @param id El ID de la reserva a eliminar.
+	 * @throws EntityNotFoundException si no se encuentra la reserva con el ID
+	 *                                 especificado.
+	 */
+	public void deleteReservaById(Integer id) throws EntityNotFoundException {
+		if (!existsById(id)) {
+			throw new EntityNotFoundException();
+		}
+
+		deleteById(id);
+	}
+
+	/**
+	 * Elimina una reserva de la base de datos.
+	 *
+	 * @param entity la reserva a eliminar.
+	 */
+	@Override
+	public void delete(Reserva entity) {
+
+		reservaRepository.delete(entity);
+	}
+
+	/**
+	 * Elimina una reserva de la base de datos.
+	 *
+	 * @param reservaDTO El objeto ReservaDTO que representa la reserva a eliminar.
+	 */
+	public void delete(ReservaDTO reservaDTO) {
+		Reserva reserva = reservaMapper.toReserva(reservaDTO);
+
+		delete(reserva);
+	}
+
+	// -----------------------------------------------------
+	// --------------- MÉTODOS PARA UPDATE -----------------
+	// -----------------------------------------------------
+
+	/**
+	 * Actualiza una reserva por su ID utilizando los datos proporcionados en el
+	 * objeto ReservaDTO.
+	 * 
+	 * @param id         El ID de la reserva a actualizar.
+	 * @param reservaDTO El objeto ReservaDTO con los datos actualizados.
+	 * @return El objeto ReservaDTO correspondiente a la reserva actualizada.
+	 * @throws EntityNotFoundException si no se encuentra la reserva con el ID
+	 *                                 especificado.
+	 */
+	public ReservaDTO updateReservaById(Integer id, ReservaDTO reservaDTO) {
+		// Verificar si la reserva con la ID especificada existe en la base de datos
+		Optional<Reserva> optionalReserva = findById(id);
+		if (optionalReserva.isEmpty()) {
+			throw new EntityNotFoundException();
+		}
+
+		// Cuerpo del método en caso de que existe la Reserva:
+		Reserva reserva;
+		Reserva reservaActualizada;
+		ReservaDTO reservaDTOActualizada;
+
+		// Actualizar los datos de la reserva con los valores recibidos en el DTO
+		reserva = reservaMapper.toReserva(reservaDTO);
+		reserva.setIdReserva(id);
+		// Esta línea podría ser útil, por si en un futuro el DTO no viene con el id
+		// de la reserva que queremos actualizar
+
+		// Guardar la reserva actualizada en la base de datos
+		reservaActualizada = save(reserva);
+
+		// Mapear la reserva actualizada a un DTO y devolverlo en la respuesta
+		reservaDTOActualizada = reservaMapper.toReservaDTO(reservaActualizada);
+
+		return reservaDTOActualizada;
+	}
+
+	// ############################################################################
 
 	/**
 	 * Obtiene un objeto ReservaDTO a partir de los Optionals de Vuelo y Pasajero,
@@ -357,41 +342,60 @@ public class ReservaService implements ReservaRepository {
 	 *                         reserva.
 	 * @param asiento          El número de asiento para la reserva.
 	 * @return El objeto ReservaDTO creado a partir de los datos obtenidos.
-	 * @throws IllegalArgumentException Si uno o ambos Optionals no contienen un valor.
+	 * @throws IllegalArgumentException Si uno o ambos Optionals no contienen un
+	 *                                  valor.
 	 */
 	public ReservaDTO getReservaDTOByOptionalsAndAsiento(Optional<Vuelo> optionalVuelo,
-	        Optional<Pasajero> optionalPasajero, String asiento) {
-	    if (optionalVuelo.isPresent() && optionalPasajero.isPresent()) {
-	        Vuelo vueloEncontradoPorId = optionalVuelo.get();
-	        Pasajero pasajeroEncontradoId = optionalPasajero.get();
+			Optional<Pasajero> optionalPasajero, String asiento) {
+		if (optionalVuelo.isPresent() && optionalPasajero.isPresent()) {
+			Vuelo vueloEncontradoPorId = optionalVuelo.get();
+			Pasajero pasajeroEncontradoId = optionalPasajero.get();
 
-	        // Convertir los objetos Vuelo y Pasajero a sus respectivos DTOs
-	        VueloDTO vueloDTOParaReserva = vueloMapper.toVueloDTO(vueloEncontradoPorId);
-	        PasajeroDTO pasajeroDTOParaReserva = pasajeroMapper.toPasajeroDTO(pasajeroEncontradoId);
+			// Convertir los objetos Vuelo y Pasajero a sus respectivos DTOs
+			VueloDTO vueloDTOParaReserva = vueloMapper.toVueloDTO(vueloEncontradoPorId);
+			PasajeroDTO pasajeroDTOParaReserva = pasajeroMapper.toPasajeroDTO(pasajeroEncontradoId);
 
-	        // Crear el objeto ReservaDTO con los datos obtenidos
-	        return new ReservaDTO(asiento, vueloDTOParaReserva, pasajeroDTOParaReserva);
-	    } else {
-	    	throw new IllegalArgumentException("No se encontraron datos válidos para crear la ReservaDTO. "
-	    			+ "Verifique la disponibilidad de Vuelo y Pasajero.");
+			// Crear el objeto ReservaDTO con los datos obtenidos
+			return new ReservaDTO(asiento, vueloDTOParaReserva, pasajeroDTOParaReserva);
+		} else {
+			throw new IllegalArgumentException("No se encontraron datos válidos para crear la ReservaDTO. "
+					+ "Verifique la disponibilidad de Vuelo y Pasajero.");
 
-	    }
+		}
 	}
-
 
 	/**
-	 * Crea una reserva a partir de un objeto ReservaDTO.
+	 * Obtiene una reserva por su ID de vuelo, ID de pasajero y número de asiento.
 	 * 
-	 * @param reservaDTO El objeto ReservaDTO que contiene los datos de la reserva.
-	 * @return El objeto ReservaDTO correspondiente a la reserva creada.
+	 * @param idVuelo    El ID del vuelo asociado a la reserva.
+	 * @param idPasajero El ID del pasajero asociado a la reserva.
+	 * @param asiento    El número de asiento seleccionado para la reserva.
+	 * @return El objeto ReservaDTO correspondiente a la reserva encontrada.
+	 * @throws EntityNotFoundException Si el vuelo, el pasajero o la reserva no se
+	 *                                 encuentran.
 	 */
-	private ReservaDTO createReservaByReservaDTO(ReservaDTO reservaDTO) {
-	    Reserva reservaParaIntroducir = reservaMapper.toReserva(reservaDTO);
-	    Reserva reservaIntroducidaEnBaseDeDatos = save(reservaParaIntroducir);
-	    return reservaMapper.toReservaDTO(reservaIntroducidaEnBaseDeDatos);
+	public ReservaDTO getReservaByIdVueloIdPasajeroAsiento(Integer idVuelo, Integer idPasajero, String asiento)
+			throws EntityNotFoundException {
+		Optional<Vuelo> optionalVuelo;
+		Optional<Pasajero> optionalPasajero;
+
+		// Buscar el vuelo y el pasajero por sus respectivos IDs
+		optionalVuelo = vueloService.findById(idVuelo);
+		optionalPasajero = pasajeroService.findById(idPasajero);
+
+		if (optionalVuelo.isPresent() && optionalPasajero.isPresent()) {
+			// Obtener la ReservaDTO llamando a otro método
+			return getReservaDTOByOptionalsAndAsiento(optionalVuelo, optionalPasajero, asiento);
+		} else {
+			// Lanzar una excepción si alguno de los elementos no se encuentra
+			throw new EntityNotFoundException();
+		}
 	}
 
-	
+	// ############################################################################
+
+	// MÉTODOS POR IMPLEMENTAR EN UN FÚTURO:
+
 	@Override
 	public void flush() {
 		// TODO Auto-generated method stub
@@ -535,8 +539,6 @@ public class ReservaService implements ReservaRepository {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
 
 	// MÉTODOS POR IMPLEMENTAR EN UN FÚTURO:
 
