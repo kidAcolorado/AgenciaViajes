@@ -27,14 +27,16 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Fecha de Nacimiento</th>
+					<th>ID:</th>
+                    <th>Nombre actual</th>
+                    <th>Apellido actual</th>
+                    <th>Fecha de Nacimiento actual</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Utiliza Thymeleaf para mostrar los detalles del pasajero -->
                 <tr>
+					<td th:text="${pasajeroDTO.idPasajeroDTO}"></td>
                     <td th:text="${pasajeroDTO.nombre}"></td>
                     <td th:text="${pasajeroDTO.apellido}"></td>
                     <td th:text="${pasajeroDTO.fechaNacimiento}"></td>

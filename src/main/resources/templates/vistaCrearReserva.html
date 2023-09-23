@@ -39,7 +39,10 @@
 	<!-- Contenido de la página -->
 
 	<div class="container">
-		<h1 class="mt-4">Detalles de la Reserva creada</h1>
+		
+		
+		
+		<h1 class="mt-4">Detalles de la Reserva</h1>
 		<hr>
 		<div th:if="${mensaje}">
 			<div class="alert alert-success" role="alert" th:text="${mensaje}"></div>
@@ -53,7 +56,7 @@
 					<tbody>
 						<tr>
 							<th>ID:</th>
-							<td th:text="${reservaDTO.id}"></td>
+							<td th:text="${reservaDTO.idReservaDTO}"></td>
 							<th>Asiento:</th>
 							<td th:text="${reservaDTO.asiento}"></td>
 						</tr>

@@ -27,6 +27,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+					<th>Id</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>Fecha de Nacimiento</th>
@@ -34,9 +35,10 @@
             </thead>
             <tbody>
                 <tr>
-                    <td th:text="${nuevoPasajero.nombre}"></td>
-                    <td th:text="${nuevoPasajero.apellido}"></td>
-                    <td th:text="${nuevoPasajero.fechaNacimiento}"></td>
+					<td th:text="${pasajeroDTO.idPasajeroDTO}"></td>
+                    <td th:text="${pasajeroDTO.nombre}"></td>
+                    <td th:text="${pasajeroDTO.apellido}"></td>
+                    <td th:text="${pasajeroDTO.fechaNacimiento}"></td>
                 </tr>
             </tbody>
         </table>

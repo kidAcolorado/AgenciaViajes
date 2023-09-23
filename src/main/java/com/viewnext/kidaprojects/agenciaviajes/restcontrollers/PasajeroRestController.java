@@ -1,5 +1,7 @@
 package com.viewnext.kidaprojects.agenciaviajes.restcontrollers;
 
+
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTO;
+
+import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTOSinId;
+import com.viewnext.kidaprojects.agenciaviajes.mappers.PasajeroMapper;
 import com.viewnext.kidaprojects.agenciaviajes.service.PasajeroService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -71,14 +76,15 @@ public class PasajeroRestController {
 	 * @return ResponseEntity con el objeto DTO del nuevo pasajero creado.
 	 */
 	@PostMapping
-	public ResponseEntity<PasajeroDTO> createPasajero(@RequestBody PasajeroDTO pasajeroDTO) {
+	public ResponseEntity<PasajeroDTO> createPasajero(@RequestBody PasajeroDTOSinId pasajeroDTOSinId) {
 		PasajeroDTO nuevoPasajeroDTO;
 
-		nuevoPasajeroDTO = pasajeroService.createPasajero(pasajeroDTO);
+		nuevoPasajeroDTO = pasajeroService.createPasajero(pasajeroDTOSinId);
 
-		return ResponseEntity.status(HttpStatus.CREATED) // Configura el código de estado a CREATED (201)
-				.body(nuevoPasajeroDTO); // Agrega el objeto DTO como cuerpo de la respuesta
+		return ResponseEntity.ok(nuevoPasajeroDTO);
 	}
+	
+	
 
 	/**
 	 * Elimina un pasajero por su ID.
@@ -101,6 +107,22 @@ public class PasajeroRestController {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PASAJERO_NOT_FOUND);
 	    }
 	}
+	
+	
+	@PostMapping("/borrar")
+	public ResponseEntity<String> deletePasajero(@RequestBody PasajeroDTO pasajeroDTO) {
+	    try {
+	    	
+	        // Llama al servicio para eliminar el pasajero por su ID
+	        pasajeroService.delete(pasajeroDTO);
+
+	        // Devuelve una respuesta sin contenido (204 No Content) para indicar éxito en la eliminación
+	        return ResponseEntity.noContent().build();
+	    } catch (EntityNotFoundException e) {
+	        // En caso de que el pasajero no se encuentre, devuelve una respuesta 404 Not Found
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PASAJERO_NOT_FOUND);
+	    }
+	}
 
 
 	/**
@@ -112,11 +134,12 @@ public class PasajeroRestController {
 	 * @return ResponseEntity con el objeto DTO del pasajero actualizado en caso de éxito,
 	 *         o ResponseEntity con status 404 (Not Found) en caso de que el pasajero no exista.
 	 */
-	@PutMapping("/{id}")
-	public ResponseEntity<?> updatePasajeroById(@PathVariable Integer id, @RequestBody PasajeroDTO pasajeroDTO) {
+	@PutMapping
+	public ResponseEntity<?> updatePasajeroById(@RequestBody PasajeroDTO pasajeroDTO) {
 	    try {
-	        // Llama al servicio para actualizar los datos del pasajero por su ID
-	        pasajeroDTO = pasajeroService.updatePasajeroById(id, pasajeroDTO);
+	        Integer idNumerico = Integer.parseInt(pasajeroDTO.getIdPasajeroDTO()); 
+	    	
+	        pasajeroService.updatePasajeroById(idNumerico, pasajeroDTO);
 
 	        // Devuelve una respuesta con status 200 (OK) y el objeto DTO del pasajero actualizado
 	        return ResponseEntity.ok(pasajeroDTO);

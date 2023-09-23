@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Pasajero</title>
+    <title>Crear Vuelo</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
@@ -15,7 +15,7 @@
     <div class="container mt-4">
         <h1>Crear Pasajero</h1>
         <hr>
-        <form id="formularioCrearPasajero" th:action="@{/pasajero/crear/}" th:object="${pasajeroDTO}" method="post">
+        <form id="formularioCrearPasajero" th:action="@{/pasajero/crear/}" th:object="${pasajeroDTOSinId}" method="post">
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre:</label>
                 <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required>
@@ -28,7 +28,7 @@
                 <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento:</label>
                 <input type="date" class="form-control" id="fechaNacimiento" th:field="*{fechaNacimiento}" required>
             </div>
-            <button type="submit" class="btn btn-dark">Crear Pasajero</button>
+            <button type="submit" class="btn btn-dark">Crear Vuelo</button>
         </form>
     </div>
     

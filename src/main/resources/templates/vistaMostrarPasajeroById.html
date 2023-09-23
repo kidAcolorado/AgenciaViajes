@@ -64,14 +64,19 @@
 					</tbody>
 				</table>
 				<div style="margin-top: 20px;"></div>
+				<!-- Contenedor para botones en línea -->
+				<div style="margin-top: 20px;"></div>
 				<!-- Botón para mostrar el formulario de actualización del pasajero -->
 				<button class="btn btn-dark actualizar-btn" onclick="mostrarFormularioPasajero()">Actualizar</button>
 
 				<!-- Formulario para borrar el pasajero -->
 				<form th:action="@{/pasajero/borrar/}" method="post" style="display: inline;">
-					<input type="hidden" name="idPasajero" th:value="${pasajero.idPasajeroDTO}" />
+					<input type="hidden" name="idPasajeroDTO" th:value="${pasajero.idPasajeroDTO}" />
 					<button type="submit" class="btn btn-danger" style="margin-left: 10px;">Borrar</button>
 				</form>
+
+
+
 			</div>
 		</div>
 	</div>
@@ -80,7 +85,7 @@
 	<div class="container mt-4" id="formulario-actualizacion-pasajero" style="display: none;">
 		<h1>Actualizar Pasajero</h1>
 		<form th:action="@{/pasajero/actualizar/}" method="post">
-			<input type="hidden" name="idPasajero" th:value="${pasajero.idPasajeroDTO}" />
+			<input type="hidden" name="idPasajeroDTO" th:value="${pasajero.idPasajeroDTO}" />
 
 			<div class="mb-3">
 				<label for="nombre">Nombre:</label>
@@ -94,7 +99,7 @@
 
 			<div class="mb-3">
 				<label for="fechaNacimiento">Fecha de Nacimiento:</label>
-				<input type="text" class="form-control" id="fechaNacimiento" name="fechaNacimiento"
+				<input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento"
 					th:value="${#dates.format(pasajero.fechaNacimiento, 'yyyy-MM-dd')}">
 			</div>
 

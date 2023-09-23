@@ -3,6 +3,7 @@ package com.viewnext.kidaprojects.agenciaviajes.mappers;
 import java.util.List;
 import org.springframework.stereotype.Component;
 import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTO;
+import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTOSinId;
 import com.viewnext.kidaprojects.agenciaviajes.model.Pasajero;
 
 /**
@@ -44,6 +45,17 @@ public class PasajeroMapper {
 		pasajero.setFechaNacimiento(pasajeroDTO.getFechaNacimiento());
 		return pasajero;
 	}
+	
+	public Pasajero toPasajero(PasajeroDTOSinId pasajeroDTO) {
+		Pasajero pasajero = new Pasajero();
+		
+		pasajero.setNombre(pasajeroDTO.getNombre());
+		pasajero.setApellido(pasajeroDTO.getApellido());
+		pasajero.setFechaNacimiento(pasajeroDTO.getFechaNacimiento());
+		return pasajero;
+	}
+	
+	
 
 	/**
 	 * Convierte una lista de objetos Pasajero en una lista de objetos PasajeroDTO.

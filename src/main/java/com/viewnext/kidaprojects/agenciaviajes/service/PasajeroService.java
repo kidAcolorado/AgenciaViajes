@@ -1,5 +1,6 @@
 package com.viewnext.kidaprojects.agenciaviajes.service;
 
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -10,9 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTO;
+
+import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTOSinId;
 import com.viewnext.kidaprojects.agenciaviajes.mappers.PasajeroMapper;
 import com.viewnext.kidaprojects.agenciaviajes.model.Pasajero;
 import com.viewnext.kidaprojects.agenciaviajes.repository.PasajeroRepository;
@@ -84,7 +88,7 @@ public class PasajeroService implements PasajeroRepository {
 	 */
 	@Override
 	public void deleteById(Integer id) {
-
+		
 		pasajeroRepository.deleteById(id);
 	}
 
@@ -93,11 +97,17 @@ public class PasajeroService implements PasajeroRepository {
 	 *
 	 * @param entity el pasajero a eliminar.
 	 */
+	public void delete(PasajeroDTO pasajeroDTO) {
+		Pasajero pasajero = pasajeroMapper.toPasajero(pasajeroDTO);
+		
+		delete(pasajero);
+
+	}
+	
 	@Override
 	public void delete(Pasajero entity) {
-
 		pasajeroRepository.delete(entity);
-
+		
 	}
 
 	/**
@@ -122,18 +132,13 @@ public class PasajeroService implements PasajeroRepository {
 	 * @param pasajeroDTO El objeto DTO que contiene los datos del pasajero.
 	 * @return El PasajeroDTO del nuevo pasajero creado.
 	 */
-	public PasajeroDTO createPasajero(PasajeroDTO pasajeroDTO) {
-		Pasajero pasajeroParaIntroducir;
-		Pasajero pasajeroIntroducidoEnBaseDeDatos;
-		PasajeroDTO nuevoPasajeroDTO;
-
-		pasajeroParaIntroducir = pasajeroMapper.toPasajero(pasajeroDTO);
-
-		pasajeroIntroducidoEnBaseDeDatos = save(pasajeroParaIntroducir);
-
-		nuevoPasajeroDTO = pasajeroMapper.toPasajeroDTO(pasajeroIntroducidoEnBaseDeDatos);
-
-		return nuevoPasajeroDTO;
+	public PasajeroDTO createPasajero(PasajeroDTOSinId pasajeroDTOSinID) {
+			
+		Pasajero pasajero = pasajeroMapper.toPasajero(pasajeroDTOSinID);
+		
+		PasajeroDTO pasajeroDTO = pasajeroMapper.toPasajeroDTO(save(pasajero));
+		
+		return pasajeroDTO;
 	}
 
 	/**
@@ -364,5 +369,7 @@ public class PasajeroService implements PasajeroRepository {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 
 }

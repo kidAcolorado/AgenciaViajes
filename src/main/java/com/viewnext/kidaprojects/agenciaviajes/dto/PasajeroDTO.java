@@ -15,6 +15,15 @@ public class PasajeroDTO {
 		this.apellido = apellido;
 		this.fechaNacimiento = fechaNacimiento;
 	}
+	
+	public PasajeroDTO(String nombre, String apellido, Date fechaNacimiento) {
+
+		
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.fechaNacimiento = fechaNacimiento;
+	}
+	
 
 	public PasajeroDTO() {
 

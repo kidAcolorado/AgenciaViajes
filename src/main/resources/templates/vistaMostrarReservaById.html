@@ -111,7 +111,7 @@
 
 				<!-- Formulario para borrar la reserva -->
 				<form th:action="@{/reserva/borrar/}" method="post" class="btn-inline">
-					<input type="hidden" name="idReserva" th:value="${reserva.idReservaDTO}" />
+					<input type="hidden" name="idReservaDTO" th:value="${reserva.idReservaDTO}" />
 					<button type="submit" class="btn btn-danger">Borrar</button>
 				</form>
 			</div>

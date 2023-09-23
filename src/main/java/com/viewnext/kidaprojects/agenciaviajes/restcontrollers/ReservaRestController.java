@@ -4,18 +4,23 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.viewnext.kidaprojects.agenciaviajes.dto.ReservaDTO;
+import com.viewnext.kidaprojects.agenciaviajes.dto.ReservaSoloIdDTO;
+
 import com.viewnext.kidaprojects.agenciaviajes.service.ReservaService;
+
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -26,9 +31,11 @@ public class ReservaRestController {
 	@Autowired
 	private ReservaService reservaService;
 	
+	
 	private static final String RESERVA_NOT_FOUND = "Reserva con las características indicadas no encontrada";
 	private static final String IDVUELO_NOT_FOUND = "Reserva con ID de Vuelo introducido no encontrada";
 	private static final String IDPASAJERO_NOT_FOUND = "Reserva con ID de Pasajero introducido no encontrada";
+	
 
 	/**
 	 * Obtiene todas las reservas.
@@ -159,23 +166,22 @@ public class ReservaRestController {
 	 * @return ResponseEntity con el objeto DTO de la reserva creada o un mensaje de
 	 *         error si no se encuentra el vuelo o el pasajero.
 	 */
-	@PostMapping("/crear/params")
-	public ResponseEntity<?> createReservaByIdVueloAndIdPasajeroAsiento(@RequestParam Integer idVuelo,
-			@RequestParam Integer idPasajero, @RequestParam String asiento) {
+	@PostMapping
+	public ResponseEntity<ReservaDTO> createReservaByIdVueloAndIdPasajeroAsiento(@RequestBody ReservaSoloIdDTO reservaSoloIdDTO) {
 
-		try {
+		
 			ReservaDTO nuevaReservaDTO;
+			
+			Integer idVuelo = Integer.parseInt(reservaSoloIdDTO.getIdVueloDTO());
+			Integer idPasajero = Integer.parseInt(reservaSoloIdDTO.getIdPasajeroDTO());
+			String asiento = reservaSoloIdDTO.getAsiento();
+			
 
 			nuevaReservaDTO = reservaService.createReservaByIdVueloIdPasajeroAsiento(idVuelo, idPasajero, asiento);
 
 			return ResponseEntity.status(HttpStatus.CREATED) // Configura el código de estado a CREATED (201)
 					.body(nuevaReservaDTO); // Agrega el objeto DTO como cuerpo de la respuesta
-
-		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(IDVUELO_NOT_FOUND + " o " + IDPASAJERO_NOT_FOUND);
-
-		}
+	
 	}
 
 	/**
@@ -199,6 +205,8 @@ public class ReservaRestController {
 					.body(RESERVA_NOT_FOUND);
 		}
 	}
+	
+	
 	
 
 	/**

@@ -21,20 +21,21 @@
 		<h1>Detalles del proceso de actualización del vuelo</h1>
 		<hr>
 		<!-- Mostrar el mensaje si está presente -->
-		<p th:if="${mensaje}" class="alert alert-success" role="alert"
-			th:text="${mensaje}"></p>
+		<p th:if="${mensaje}" class="alert alert-success" role="alert" th:text="${mensaje}"></p>
 
 		<table class="table table-striped">
 			<thead>
 				<tr>
-					<th>Origen</th>
-					<th>Destino</th>
-					<th>Fecha del Vuelo</th>
+					<th>ID:</th>
+					<th>Origen actual</th>
+					<th>Destino actual</th>
+					<th>Fecha del Vuelo actual</th>
 				</tr>
 			</thead>
 			<tbody>
 				<!-- Utiliza Thymeleaf para mostrar los detalles del pasajero -->
 				<tr>
+					<td th:text="${vueloDTO.idVueloDTO}"></td>
 					<td th:text="${vueloDTO.origen}"></td>
 					<td th:text="${vueloDTO.destino}"></td>
 					<td th:text="${vueloDTO.fecha}"></td>

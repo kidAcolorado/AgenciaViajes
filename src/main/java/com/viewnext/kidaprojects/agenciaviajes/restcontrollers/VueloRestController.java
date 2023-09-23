@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTO;
+import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTOSinId;
 import com.viewnext.kidaprojects.agenciaviajes.service.VueloService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -105,10 +106,10 @@ public class VueloRestController {
 	 *         o ResponseEntity vacío si no se pudo crear el vuelo.
 	 */
 	@PostMapping
-	public ResponseEntity<VueloDTO> createVuelo(@RequestBody VueloDTO vueloDTO) {
+	public ResponseEntity<VueloDTO> createVuelo(@RequestBody VueloDTOSinId vueloDTOsDtoSinId) {
 		VueloDTO nuevoVueloDTO;
 
-		nuevoVueloDTO = vueloService.createVuelo(vueloDTO);
+		nuevoVueloDTO = vueloService.createVuelo(vueloDTOsDtoSinId);
 
 		return ResponseEntity.status(HttpStatus.CREATED) // Configura el código de estado a CREATED (201)
 				.body(nuevoVueloDTO); // Agrega el objeto DTO como cuerpo de la respuesta
@@ -146,11 +147,13 @@ public class VueloRestController {
 	 *         éxito, o ResponseEntity con estado 404 (Not Found) en caso de que el
 	 *         vuelo no exista.
 	 */
-	@PutMapping("/{id}")
-	public ResponseEntity<?> updateVueloById(@PathVariable Integer id, @RequestBody VueloDTO vueloDTO) {
+	@PutMapping
+	public ResponseEntity<?> updateVueloById(@RequestBody VueloDTO vueloDTO) {
 	    try {
+	    	
+	    	Integer idNumerico = Integer.parseInt(vueloDTO.getIdVueloDTO());
 	        // Llama al servicio para actualizar los datos del vuelo por su ID
-	        vueloDTO = vueloService.updateVueloById(id, vueloDTO);
+	        vueloService.updateVueloById(idNumerico, vueloDTO);
 
 	        // Devuelve una respuesta con status 200 (OK) y el objeto DTO del vuelo actualizado
 	        return ResponseEntity.ok(vueloDTO);

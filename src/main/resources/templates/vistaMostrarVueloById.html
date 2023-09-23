@@ -69,7 +69,7 @@
 
 				<!-- Formulario para borrar el vuelo -->
 				<form th:action="@{/vuelo/borrar/}" method="post" style="display: inline;">
-					<input type="hidden" name="idVuelo" th:value="${vuelo.idVueloDTO}" />
+					<input type="hidden" name="idVueloDTO" th:value="${vuelo.idVueloDTO}" />
 					<button type="submit" class="btn btn-danger" style="margin-left: 10px;">Borrar</button>
 				</form>
 
@@ -83,7 +83,7 @@
 	<div class="container mt-4" id="formulario-actualizacion-vuelo" style="display: none;">
 		<h1>Actualizar Vuelo</h1>
 		<form th:action="@{/vuelo/actualizar/}" method="post">
-			<input type="hidden" name="idVuelo" th:value="${vuelo.idVueloDTO}" />
+			<input type="hidden" name="idVueloDTO" th:value="${vuelo.idVueloDTO}" />
 
 			<div class="mb-3">
 				<label for="origen">Origen:</label>
@@ -97,8 +97,8 @@
 
 			<div class="mb-3">
 				<label for="fecha">Fecha del Vuelo:</label>
-				<input type="text" class="form-control" id="fecha" name="fecha"
-					th:value="${#dates.format(vuelo.fecha, 'yyyy-MM-dd HH:mm')}">
+				<input type="date" class="form-control" id="fecha" name="fecha"
+					th:value="${#dates.format(vuelo.fecha, 'yyyy-MM-dd')}">
 			</div>
 
 			<button type="submit" class="btn btn-dark">Guardar Cambios</button>

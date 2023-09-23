@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 import org.springframework.stereotype.Service;
 import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTO;
+import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTOSinId;
 import com.viewnext.kidaprojects.agenciaviajes.mappers.VueloMapper;
 import com.viewnext.kidaprojects.agenciaviajes.model.Vuelo;
 import com.viewnext.kidaprojects.agenciaviajes.repository.VueloRepository;
@@ -141,12 +142,12 @@ public class VueloService implements VueloRepository {
 	 *                 crear.
 	 * @return Objeto VueloDTO que representa el vuelo creado.
 	 */
-	public VueloDTO createVuelo(VueloDTO vueloDTO) {
+	public VueloDTO createVuelo(VueloDTOSinId vueloDTOSinId) {
 		Vuelo vueloParaIntroducir;
 		Vuelo vueloIntroducidoEnBaseDeDatos;
 		VueloDTO nuevoVueloDTO;
 
-		vueloParaIntroducir = vueloMapper.toVuelo(vueloDTO);
+		vueloParaIntroducir = vueloMapper.toVuelo(vueloDTOSinId);
 
 		vueloIntroducidoEnBaseDeDatos = save(vueloParaIntroducir);
 

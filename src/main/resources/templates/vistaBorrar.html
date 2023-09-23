@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mostrar mensaje borrar exitoso</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+	<!-- Incluye el Navbar utilizando Thymeleaf -->
+	<div th:replace="navbar.html"></div>
+
+	<div th:if="${mensaje}">
+		<div class="alert alert-success" role="alert" th:text="${mensaje}"></div>
+	</div>
+
+	<!-- Bootstrap JS -->
+	<script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

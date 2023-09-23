@@ -2,54 +2,35 @@ package com.viewnext.kidaprojects.agenciaviajes.dto;
 
 public class ReservaSoloIdDTO {
 
-	
-	
-	private String idReserva;
-	private String idVuelo;
-	private String idPasajero;
+	private String idVueloDTO;
+	private String idPasajeroDTO;
 	private String asiento;
-	
-	public ReservaSoloIdDTO() {
-		
-	}
-	
+
 	public ReservaSoloIdDTO(String idVuelo, String idPasajero, String asiento) {
-		this.idVuelo = idVuelo;
-		this.idPasajero = idPasajero;
+		this.idVueloDTO = idVuelo;
+		this.idPasajeroDTO = idPasajero;
 		this.asiento = asiento;
-		
-	}
-	
-	public ReservaSoloIdDTO(String idReserva, String idVuelo, String idPasajero, String asiento) {
-		this.idReserva = idReserva;
-		this.idVuelo = idVuelo;
-		this.idPasajero = idPasajero;
-		this.asiento = asiento;
+
 	}
 
-	
-	public String getIdReserva() {
-		return idReserva;
+	public ReservaSoloIdDTO() {
+
 	}
 
-	public void setIdReserva(String idReserva) {
-		this.idReserva = idReserva;
+	public String getIdVueloDTO() {
+		return idVueloDTO;
 	}
 
-	public String getIdVuelo() {
-		return idVuelo;
+	public void setIdVueloDTO(String idVueloDTO) {
+		this.idVueloDTO = idVueloDTO;
 	}
 
-	public void setIdVuelo(String idVuelo) {
-		this.idVuelo = idVuelo;
+	public String getIdPasajeroDTO() {
+		return idPasajeroDTO;
 	}
 
-	public String getIdPasajero() {
-		return idPasajero;
-	}
-
-	public void setIdPasajero(String idPasajero) {
-		this.idPasajero = idPasajero;
+	public void setIdPasajeroDTO(String idPasajeroDTO) {
+		this.idPasajeroDTO = idPasajeroDTO;
 	}
 
 	public String getAsiento() {
@@ -59,8 +40,6 @@ public class ReservaSoloIdDTO {
 	public void setAsiento(String asiento) {
 		this.asiento = asiento;
 	}
-	
-	
-	
+
 	
 }

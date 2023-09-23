@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTO;
+import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTOSinId;
 
 import java.util.List;
 
@@ -146,7 +147,7 @@ public class VueloViewController {
      */
     @GetMapping("/formcrear")
     public String mostrarFormularioCrearVuelo(Model model) {
-        model.addAttribute("vueloDTO", new VueloDTO());
+        model.addAttribute("vueloDTOSinId", new VueloDTOSinId());
         return "formularioCrearVuelo";
     }
 
@@ -158,18 +159,18 @@ public class VueloViewController {
      * @return El nombre de la vista a mostrar después de la creación.
      */
     @PostMapping("/crear/")
-    public String createVuelo(@ModelAttribute("vueloDTO") VueloDTO vueloDTO, Model model) {
+    public String createVuelo(@ModelAttribute("vueloDTOSinId") VueloDTOSinId vueloDTOSinId, Model model) {
         try {
             ResponseEntity<Void> response = vueloWebClient.post()
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(vueloDTO)
+                    .bodyValue(vueloDTOSinId)
                     .retrieve()
                     .toBodilessEntity()
                     .block();
 
             if (response != null && response.getStatusCode().is2xxSuccessful()) {
                 model.addAttribute(MENSAJE, "El Vuelo fue creado exitosamente");
-                model.addAttribute("nuevoVuelo", vueloDTO);
+                model.addAttribute("nuevoVuelo", vueloDTOSinId);
                 return "VistaCrearVuelo"; // Redireccionar a la lista de vuelos
             } else {
                 model.addAttribute(MENSAJE, "Error al crear el Vuelo");
@@ -189,19 +190,20 @@ public class VueloViewController {
      * @return El nombre de la vista a mostrar después de la eliminación.
      */
     @PostMapping("/borrar/")
-    public String borrarVuelo(@ModelAttribute VueloDTO vueloDTO, Model model) {
+    public String borrarVuelo(@RequestParam("idVueloDTO") String idVueloDTO, Model model) {
         try {
-            String id = vueloDTO.getIdVueloDTO();
+            
+        	System.out.println(idVueloDTO);
 
-            ResponseEntity<String> response = vueloWebClient.delete()
-                    .uri("/{id}", id)
+            ResponseEntity<Void> response = vueloWebClient.delete()
+                    .uri("/{id}", idVueloDTO)
                     .retrieve()
-                    .toEntity(String.class)
+                    .toBodilessEntity()
                     .block();
 
             if (response != null && response.getStatusCode().is2xxSuccessful()) {
-                model.addAttribute(MENSAJE, "El Vuelo con ID introducido fue eliminado exitosamente");
-                return "VistaBorrarVuelo";
+                model.addAttribute(MENSAJE, "Vuelo eliminado con éxito");
+                return "VistaBorrar";
             } else {
                 model.addAttribute(MENSAJE, "Error al borrar el Vuelo");
                 return VISTA_ERROR; // Maneja otros errores posibles
@@ -225,27 +227,28 @@ public class VueloViewController {
     @PostMapping("/actualizar/")
     public String actualizarVuelo(@ModelAttribute VueloDTO vueloDTO, Model model) {
         try {
-            Integer id = Integer.parseInt(vueloDTO.getIdVueloDTO());
+            
 
-            ResponseEntity<Void> response = vueloWebClient.put()
-                    .uri("/{id}", id)
+            ResponseEntity<VueloDTO> response = vueloWebClient.put()
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(vueloDTO)
                     .retrieve()
-                    .toBodilessEntity()
+                    .toEntity(VueloDTO.class)
                     .block();
 
             if (response != null && response.getStatusCode().is2xxSuccessful()) {
-                model.addAttribute(MENSAJE, "El Vuelo con ID introducido fue actualizado exitosamente");
+                model.addAttribute(MENSAJE, "Datos del vuelo actualizados con éxito");
                 // Asigna el objeto VueloDTO actualizado al modelo
-                model.addAttribute("vueloDTO", vueloDTO);
+                model.addAttribute("vuelo", response);
+                
+                
                 return "VistaActualizarVuelo";
             } else {
                 model.addAttribute(MENSAJE, "Error al actualizar el Vuelo");
                 return VISTA_ERROR;
             }
         } catch (NumberFormatException e) {
-            model.addAttribute(MENSAJE, ID_ERRONEO);
+            model.addAttribute(MENSAJE, "Error al actualizar el Vuelo");
             return VISTA_ERROR;
         } catch (WebClientResponseException e) {
             model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);

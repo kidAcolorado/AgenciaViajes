@@ -15,7 +15,7 @@
     <div class="container mt-4">
         <h1>Crear Vuelo</h1>
         <hr>
-        <form id="formularioCrearVuelo" th:action="@{/vuelo/crear/}" th:object="${vueloDTO}" method="post">
+        <form id="formularioCrearVuelo" th:action="@{/vuelo/crear/}" th:object="${vueloDTOSinId}" method="post">
             <div class="mb-3">
                 <label for="origen" class="form-label">Origen:</label>
                 <input type="text" class="form-control" id="origen" th:field="*{origen}" required>

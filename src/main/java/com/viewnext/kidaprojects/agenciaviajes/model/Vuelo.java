@@ -4,8 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "vuelos")
@@ -16,6 +18,9 @@ public class Vuelo {
 	private String origen;
 	private String destino;
 	private Date fecha;
+	
+	@OneToMany(mappedBy = "vuelo") // Anotación inversa
+    private List<Reserva> reservas;
 
 	public Vuelo(String origen, String destino, Date fecha) {
 		this.origen = origen;

@@ -1,6 +1,8 @@
 package com.viewnext.kidaprojects.agenciaviajes.viewcontrollers;
 
 import java.util.List;
+
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTO;
 import com.viewnext.kidaprojects.agenciaviajes.dto.ReservaDTO;
 import com.viewnext.kidaprojects.agenciaviajes.dto.ReservaSoloIdDTO;
+import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTO;
 
 
 
@@ -26,9 +31,15 @@ public class ReservaViewController {
 	private static final String ID_ERRONEO = "ID de Reserva no válido";
 	private static final String FALLO_CONEXION_WEBCLIENT = "Error al comunicarse con el servicio";
 	private final WebClient reservaWebClient;
-
-	public ReservaViewController(WebClient reservaWebClient) {
+	private final WebClient vueloWebClient;
+	private final WebClient pasajeroWebClient;
+	
+	
+	public ReservaViewController(WebClient reservaWebClient, WebClient vueloWebClient, WebClient pasajeroWebClient) {
 		this.reservaWebClient = reservaWebClient;
+		this.vueloWebClient = vueloWebClient;
+		this.pasajeroWebClient = pasajeroWebClient;
+		
 	}
 
 	
@@ -38,6 +49,65 @@ public class ReservaViewController {
 		// Aquí puedes realizar cualquier lógica adicional necesaria antes de mostrar el
 		// formulario
 		return "formularioBuscarReserva";
+	}
+	
+	//MOSTRARTODOMETODO
+	@GetMapping("/formcrear")
+	public String mostrarFormularioCrearReserva(Model model) {
+		// Realiza una solicitud GET al servicio web para obtener una lista de vuelos
+        List<VueloDTO> listaVuelos = vueloWebClient.get()
+                .retrieve()
+                .bodyToFlux(VueloDTO.class)
+                .collectList()
+                .block();
+        
+        List<PasajeroDTO> listaPasajeros = pasajeroWebClient.get()
+                .retrieve()
+                .bodyToFlux(PasajeroDTO.class)
+                .collectList()
+                .block();
+
+       
+		
+		model.addAttribute("listaVuelos", listaVuelos);
+		model.addAttribute("listaPasajeros", listaPasajeros);
+		
+		
+		
+		
+		return "formularioCrearReserva";
+	}
+	
+	@PostMapping("/crear/")
+	public String createReserva( @RequestParam("idVueloDTO") String idVueloDTO,
+		    @RequestParam("idPasajeroDTO") String idPasajeroDTO,
+		    @RequestParam("asiento") String asiento,
+		    Model model) {
+		try {
+			
+			ReservaSoloIdDTO reservaSoloIdDTO = new ReservaSoloIdDTO(idVueloDTO, idPasajeroDTO, asiento);
+			
+			System.out.println("psajero: " + reservaSoloIdDTO.getIdPasajeroDTO());
+			System.out.println("vuelo: " + reservaSoloIdDTO.getIdVueloDTO());
+			System.out.println(reservaSoloIdDTO.getAsiento());
+
+			 ReservaDTO response = reservaWebClient.post()
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .bodyValue(reservaSoloIdDTO)
+	                    .retrieve()
+	                    .bodyToMono(ReservaDTO.class)
+	                    .block();
+
+			 if (response != null) {
+	                model.addAttribute(MENSAJE, "La Reserva fue creado exitosamente");
+	                model.addAttribute("reservaDTO", response);
+	                return "VistaCrearReserva"; 
+			} else {
+				return "error";
+			}
+		} catch (Exception ex) {
+			return "error";
+		}
 	}
 	
 	@GetMapping
@@ -61,6 +131,9 @@ public class ReservaViewController {
 	            return VISTA_ERROR;
 	        }
 	}
+	
+	
+	
 
 	@GetMapping("/id")
 	public String mostrarVistaReservaById(@RequestParam(name = "id") String id, Model model) {
@@ -131,58 +204,18 @@ public class ReservaViewController {
 	
 	
 
-	@PostMapping("/crear/")
-	public String createReserva(@ModelAttribute("reservaSoloIdDTO") ReservaSoloIdDTO reservaSoloIdDTO, Model model) {
-		try {
-			// Obtener los valores del objeto reservaSoloIdDTO. Además parseamos a integer
-			// los String de id
-			Integer idVuelo = Integer.parseInt(reservaSoloIdDTO.getIdVuelo());
-			Integer idPasajero = Integer.parseInt(reservaSoloIdDTO.getIdPasajero());
-			String asiento = reservaSoloIdDTO.getAsiento();
+	
 
-			// Construir la URL con los parámetros
-			String url = "/crear/params?idVuelo={idVuelo}&idPasajero={idPasajero}&asiento={asiento}";
-
-			// Hacer la solicitud utilizando WebClient
-			ResponseEntity<ReservaDTO> response = reservaWebClient.post(
-					).uri(url, idVuelo, idPasajero, asiento)
-					.retrieve()
-					.toEntity(ReservaDTO.class)
-					.block();
-			if (response.getStatusCode().is2xxSuccessful()) {
-				// Obtener el objeto ReservaDTO de la respuesta
-				ReservaDTO reservaDTO = response.getBody();
-				// Agregar reservaDTO al modelo
-				model.addAttribute("reservaDTO", reservaDTO);
-				model.addAttribute("mensaje",
-						"La Reserva, con los datos que se muestran a continuación, fue creada exitosamente");
-
-				return "reservaCrear";
-			} else {
-				return "error";
-			}
-		} catch (Exception ex) {
-			return "error";
-		}
-	}
-
-	@GetMapping("/formcrear")
-	public String mostrarFormularioCrearReserva(Model model) {
-
-		ReservaSoloIdDTO reservaSoloIdDTO = new ReservaSoloIdDTO();
-		model.addAttribute("reservaSoloIdDTO", reservaSoloIdDTO);
-
-		return "formularioCrearReserva";
-	}
+	
 
 	@PostMapping("/actualizar/")
 	public String actualizarReserva(@ModelAttribute("reservaSoloIdDTO") ReservaSoloIdDTO reservaSoloIdDTO, Model model) {
 		try {
 			// Obtener los valores del objeto reservaSoloIdDTO. Además parseamos a integer
 			// los String de id
-			Integer idReserva = Integer.parseInt(reservaSoloIdDTO.getIdReserva());
-			Integer idVuelo = Integer.parseInt(reservaSoloIdDTO.getIdVuelo());
-			Integer idPasajero = Integer.parseInt(reservaSoloIdDTO.getIdPasajero());
+			
+			Integer idVuelo = Integer.parseInt(reservaSoloIdDTO.getIdVueloDTO());
+			Integer idPasajero = Integer.parseInt(reservaSoloIdDTO.getIdPasajeroDTO());
 			String asiento = reservaSoloIdDTO.getAsiento();
 
 			// Construir la URL con los parámetros
@@ -190,7 +223,7 @@ public class ReservaViewController {
 
 			// Realizar la actualización utilizando WebClient y el ID de la reserva
 			ResponseEntity<ReservaDTO> response = reservaWebClient.put()
-					.uri(url, idReserva, idVuelo, idPasajero, asiento)
+					.uri(url, idVuelo, idPasajero, asiento)
 					.retrieve().
 					toEntity(ReservaDTO.class)
 					.block();
@@ -211,6 +244,34 @@ public class ReservaViewController {
 		}
 	}
 	
+	
+	@PostMapping("/borrar/")
+	public String borrarReserva(@RequestParam("idReservaDTO") String idReservaDTO, Model model) {
+	    try {
+	    	
+	    	
+	    	ResponseEntity<Void> response = reservaWebClient.delete()
+	    			.uri("/{id}", idReservaDTO)
+					.retrieve()
+					.toBodilessEntity()
+					.block();
+
+	        if (response != null && response.getStatusCode().is2xxSuccessful()) {
+	            model.addAttribute(MENSAJE, "Reserva eliminada con éxito");
+	           
+	            return "VistaBorrar"; 
+	        } else {
+	            model.addAttribute(MENSAJE, "Error al borrar la reserva");
+	            return VISTA_ERROR; // Maneja otros errores posibles
+	        }
+	    } catch (NumberFormatException e) {
+	        model.addAttribute(MENSAJE, ID_ERRONEO);
+	        return VISTA_ERROR;
+	    } catch (WebClientResponseException e) {
+	        model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
+	        return VISTA_ERROR;
+	    }
+	}
 	
 	
 

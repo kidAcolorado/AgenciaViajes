@@ -55,7 +55,7 @@
 								<table class="inline-table">
 									<tbody>
 										<tr>
-											<th>ID:</th>
+											<th>ID Reserva:</th>
 											<td th:text="${reserva.idReservaDTO}"></td>
 											<th>Asiento:</th>
 											<td th:text="${reserva.asiento}"></td>
@@ -69,6 +69,8 @@
 								<table class="inline-table">
 									<tbody>
 										<tr>
+											<th>ID Vuelo:</th>
+											<td th:text="${reserva.vueloDTO.idVueloDTO}"></td>
 											<th>Origen:</th>
 											<td th:text="${reserva.vueloDTO.origen}"></td>
 											<th>Destino:</th>
@@ -85,6 +87,8 @@
 								<table class="inline-table">
 									<tbody>
 										<tr>
+											<th>ID Pasajero:</th>
+											<td th:text="${reserva.pasajeroDTO.idPasajeroDTO}"></td>
 											<th>Nombre:</th>
 											<td th:text="${reserva.pasajeroDTO.nombre}"></td>
 											<th>Apellido:</th>
