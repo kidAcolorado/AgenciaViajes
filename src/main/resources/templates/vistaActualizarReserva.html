@@ -28,10 +28,6 @@
 	white-space: nowrap;
 	padding-right: 10px;
 }
-
-.actualizar-btn {
-	margin-top: 20px; /* Ajusta el valor según sea necesario */
-}
 </style>
 </head>
 
@@ -41,21 +37,26 @@
 	<div th:replace="navbar.html"></div>
 
 	<!-- Contenido de la página -->
-	<div class="container mt-4">
-		<h1>Detalles del proceso de actualización de la Reserva</h1>
+
+	<div class="container">
+		
+		
+		
+		<h1 class="mt-4">Detalles de la Reserva actualizada</h1>
 		<hr>
-		<!-- Mostrar el mensaje si está presente -->
-		<p th:if="${mensaje}" class="alert alert-success" role="alert"
-			th:text="${mensaje}"></p>
-		<!-- Línea horizontal -->
+		<div th:if="${mensaje}">
+			<div class="alert alert-success" role="alert" th:text="${mensaje}"></div>
+		</div>
+
+		<!-- Contenido de la página -->
 		<div class="reserva-wrapper">
 			<div class="reserva-block">
-				<h2>Datos generales:</h2>
+				<h2>Datos de la Reserva actuales:</h2>
 				<table class="inline-table">
 					<tbody>
 						<tr>
 							<th>ID:</th>
-							<td th:text="${reservaDTO.id}"></td>
+							<td th:text="${reservaDTO.idReservaDTO}"></td>
 							<th>Asiento:</th>
 							<td th:text="${reservaDTO.asiento}"></td>
 						</tr>
@@ -64,12 +65,10 @@
 			</div>
 
 			<div class="vuelo-block">
-				<h2>Datos de Vuelo reservado:</h2>
+				<h2>Datos de Vuelo reservado actuales:</h2>
 				<table class="inline-table">
 					<tbody>
 						<tr>
-							<th>ID Vuelo:</th>
-							<td th:text="${reservaDTO.vueloDTO.id}"></td>
 							<th>Origen:</th>
 							<td th:text="${reservaDTO.vueloDTO.origen}"></td>
 							<th>Destino:</th>
@@ -82,34 +81,25 @@
 			</div>
 
 			<div class="pasajero-block">
-				<h2>Reserva a nombre de:</h2>
+				<h2>Datos de Pasajero actuales:</h2>
 				<table class="inline-table">
 					<tbody>
 						<tr>
-							<th>ID Pasajero:</th>
-							<td th:text="${reservaDTO.pasajeroDTO.id}"></td>
 							<th>Nombre:</th>
 							<td th:text="${reservaDTO.pasajeroDTO.nombre}"></td>
 							<th>Apellido:</th>
 							<td th:text="${reservaDTO.pasajeroDTO.apellido}"></td>
 							<th>Fecha de Nacimiento:</th>
 							<td th:text="${reservaDTO.pasajeroDTO.fechaNacimiento}"></td>
-
-
 						</tr>
 					</tbody>
 				</table>
-
-
 			</div>
 		</div>
 	</div>
 
-
-
 	<!-- Bootstrap JS -->
 	<script src="/js/bootstrap.bundle.min.js"></script>
-
 
 </body>
 

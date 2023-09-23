@@ -22,7 +22,6 @@ import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTOSinId;
 public class PasajeroViewController {
 	private static final String MENSAJE = "mensaje";
 	private static final String VISTA_ERROR = "vistaError"; 
-	private static final String ID_ERRONEO = "ID de pasajero no válido";
 	private static final String FALLO_CONEXION_WEBCLIENT = "Error al comunicarse con el servicio";
 	
 	private final WebClient pasajeroWebClient;

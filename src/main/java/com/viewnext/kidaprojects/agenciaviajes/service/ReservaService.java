@@ -8,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
-
 import org.springframework.stereotype.Service;
-import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTO;
 import com.viewnext.kidaprojects.agenciaviajes.dto.ReservaDTO;
-import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTO;
 import com.viewnext.kidaprojects.agenciaviajes.mappers.PasajeroMapper;
 import com.viewnext.kidaprojects.agenciaviajes.mappers.ReservaMapper;
 import com.viewnext.kidaprojects.agenciaviajes.mappers.VueloMapper;
@@ -20,7 +17,6 @@ import com.viewnext.kidaprojects.agenciaviajes.model.Pasajero;
 import com.viewnext.kidaprojects.agenciaviajes.model.Reserva;
 import com.viewnext.kidaprojects.agenciaviajes.model.Vuelo;
 import com.viewnext.kidaprojects.agenciaviajes.repository.ReservaRepository;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
@@ -38,16 +34,14 @@ public class ReservaService implements ReservaRepository {
 	private final VueloService vueloService;
 	private final PasajeroService pasajeroService;
 	private final ReservaMapper reservaMapper;
-	private final VueloMapper vueloMapper;
-	private final PasajeroMapper pasajeroMapper;
+	
 
 	public ReservaService(ReservaMapper reservaMapper, VueloService vueloService, PasajeroService pasajeroService,
 			VueloMapper vueloMapper, PasajeroMapper pasajeroMapper) {
 		this.reservaMapper = reservaMapper;
 		this.vueloService = vueloService;
 		this.pasajeroService = pasajeroService;
-		this.vueloMapper = vueloMapper;
-		this.pasajeroMapper = pasajeroMapper;
+		
 	}
 
 	// -----------------------------------------------------
@@ -303,96 +297,27 @@ public class ReservaService implements ReservaRepository {
 	 * @throws EntityNotFoundException si no se encuentra la reserva con el ID
 	 *                                 especificado.
 	 */
-	public ReservaDTO updateReservaById(Integer id, ReservaDTO reservaDTO) {
-		// Verificar si la reserva con la ID especificada existe en la base de datos
-		Optional<Reserva> optionalReserva = findById(id);
-		if (optionalReserva.isEmpty()) {
+	public ReservaDTO updateReserva(Integer idReserva, Integer idPasajero, Integer idVuelo, String asiento) {
+		
+		Optional<Reserva> optionalReserva = findById(idReserva);
+		Optional<Vuelo> optionalVuelo = vueloService.findById(idVuelo);
+		Optional<Pasajero> optionalPasajero = pasajeroService.findById(idPasajero);
+
+		if (optionalReserva.isEmpty() || optionalPasajero.isEmpty() || optionalVuelo.isEmpty()) {
 			throw new EntityNotFoundException();
 		}
 
-		// Cuerpo del método en caso de que existe la Reserva:
-		Reserva reserva;
-		Reserva reservaActualizada;
-		ReservaDTO reservaDTOActualizada;
+		Pasajero pasajero = optionalPasajero.get();
+		Vuelo vuelo = optionalVuelo.get();
+		
+		Reserva reserva = new Reserva(asiento, vuelo, pasajero);
+		reserva.setIdReserva(idReserva);
 
-		// Actualizar los datos de la reserva con los valores recibidos en el DTO
-		reserva = reservaMapper.toReserva(reservaDTO);
-		reserva.setIdReserva(id);
-		// Esta línea podría ser útil, por si en un futuro el DTO no viene con el id
-		// de la reserva que queremos actualizar
+		return reservaMapper.toReservaDTO(save(reserva));
 
-		// Guardar la reserva actualizada en la base de datos
-		reservaActualizada = save(reserva);
-
-		// Mapear la reserva actualizada a un DTO y devolverlo en la respuesta
-		reservaDTOActualizada = reservaMapper.toReservaDTO(reservaActualizada);
-
-		return reservaDTOActualizada;
 	}
 
-	// ############################################################################
-
-	/**
-	 * Obtiene un objeto ReservaDTO a partir de los Optionals de Vuelo y Pasajero,
-	 * junto con el número de asiento.
-	 * 
-	 * @param optionalVuelo    El Optional que contiene el Vuelo asociado a la
-	 *                         reserva.
-	 * @param optionalPasajero El Optional que contiene el Pasajero asociado a la
-	 *                         reserva.
-	 * @param asiento          El número de asiento para la reserva.
-	 * @return El objeto ReservaDTO creado a partir de los datos obtenidos.
-	 * @throws IllegalArgumentException Si uno o ambos Optionals no contienen un
-	 *                                  valor.
-	 */
-	public ReservaDTO getReservaDTOByOptionalsAndAsiento(Optional<Vuelo> optionalVuelo,
-			Optional<Pasajero> optionalPasajero, String asiento) {
-		if (optionalVuelo.isPresent() && optionalPasajero.isPresent()) {
-			Vuelo vueloEncontradoPorId = optionalVuelo.get();
-			Pasajero pasajeroEncontradoId = optionalPasajero.get();
-
-			// Convertir los objetos Vuelo y Pasajero a sus respectivos DTOs
-			VueloDTO vueloDTOParaReserva = vueloMapper.toVueloDTO(vueloEncontradoPorId);
-			PasajeroDTO pasajeroDTOParaReserva = pasajeroMapper.toPasajeroDTO(pasajeroEncontradoId);
-
-			// Crear el objeto ReservaDTO con los datos obtenidos
-			return new ReservaDTO(asiento, vueloDTOParaReserva, pasajeroDTOParaReserva);
-		} else {
-			throw new IllegalArgumentException("No se encontraron datos válidos para crear la ReservaDTO. "
-					+ "Verifique la disponibilidad de Vuelo y Pasajero.");
-
-		}
-	}
-
-	/**
-	 * Obtiene una reserva por su ID de vuelo, ID de pasajero y número de asiento.
-	 * 
-	 * @param idVuelo    El ID del vuelo asociado a la reserva.
-	 * @param idPasajero El ID del pasajero asociado a la reserva.
-	 * @param asiento    El número de asiento seleccionado para la reserva.
-	 * @return El objeto ReservaDTO correspondiente a la reserva encontrada.
-	 * @throws EntityNotFoundException Si el vuelo, el pasajero o la reserva no se
-	 *                                 encuentran.
-	 */
-	public ReservaDTO getReservaByIdVueloIdPasajeroAsiento(Integer idVuelo, Integer idPasajero, String asiento)
-			throws EntityNotFoundException {
-		Optional<Vuelo> optionalVuelo;
-		Optional<Pasajero> optionalPasajero;
-
-		// Buscar el vuelo y el pasajero por sus respectivos IDs
-		optionalVuelo = vueloService.findById(idVuelo);
-		optionalPasajero = pasajeroService.findById(idPasajero);
-
-		if (optionalVuelo.isPresent() && optionalPasajero.isPresent()) {
-			// Obtener la ReservaDTO llamando a otro método
-			return getReservaDTOByOptionalsAndAsiento(optionalVuelo, optionalPasajero, asiento);
-		} else {
-			// Lanzar una excepción si alguno de los elementos no se encuentra
-			throw new EntityNotFoundException();
-		}
-	}
-
-	// ############################################################################
+	
 
 	// MÉTODOS POR IMPLEMENTAR EN UN FÚTURO:
 

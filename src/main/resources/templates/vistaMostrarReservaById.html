@@ -35,7 +35,7 @@
 			padding-right: 10px;
 		}
 
-		
+
 
 		/* Alinea los botones en línea */
 		.btn-inline {
@@ -107,7 +107,11 @@
 				<div style="margin-top: 20px;"></div>
 
 				<!-- Botón para mostrar el formulario de actualización de la reserva -->
-				<button class="btn btn-dark actualizar-btn" onclick="mostrarFormulario()">Actualizar</button>
+				<form th:action="@{/reserva/formActualizar}" method="get" class="btn-inline">
+					<input type="hidden" name="idReservaDTO" th:value="${reserva.idReservaDTO}" />
+					<button type="submit" class="btn btn-dark">Actualizar</button>
+				</form>
+
 
 				<!-- Formulario para borrar la reserva -->
 				<form th:action="@{/reserva/borrar/}" method="post" class="btn-inline">
@@ -119,45 +123,6 @@
 	</div>
 	</div>
 
-	<!-- Formulario de actualización oculto por defecto -->
-	<div class="container mt-4" id="formulario-actualizacion" style="display: none;">
-		<h1>Actualizar Reserva</h1>
-		<form th:action="@{/reserva/actualizar/}" method="post">
-			<input type="hidden" name="idReserva" th:value="${reserva.idReservaDTO}" />
 
-			<div class="mb-3">
-				<label for="idVuelo">ID del Vuelo:</label>
-				<input type="text" class="form-control" id="idVuelo" name="idVuelo"
-					th:value="${reserva.vueloDTO.idVueloDTO}">
-			</div>
-
-			<div class="mb-3">
-				<label for="idPasajero">ID del Pasajero:</label>
-				<input type="text" class="form-control" id="idPasajero" name="idPasajero"
-					th:value="${reserva.pasajeroDTO.idPasajeroDTO}">
-			</div>
-
-			<div class="mb-3">
-				<label for="asiento">Asiento:</label>
-				<input type="text" class="form-control" id="asiento" name="asiento" th:value="${reserva.asiento}">
-			</div>
-
-			<button type="submit" class="btn btn-dark">Guardar Cambios</button>
-		</form>
-	</div>
-
-	<!-- Bootstrap JS -->
-	<script src="/js/bootstrap.bundle.min.js"></script>
-
-	<script>
-		function mostrarFormulario() {
-			// Mostrar el formulario de actualización y ocultar los detalles de la reserva
-			document.querySelector('h1').style.display = 'none';
-			document.getElementById('formulario-actualizacion').style.display = 'block';
-			document.getElementsByClassName('reserva-wrapper')[0].style.display = 'none';
-		}
-	</script>
-
-</body>
 
 </html>

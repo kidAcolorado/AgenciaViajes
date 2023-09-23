@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Crear Reserva</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<style>
+		/* Estilos para los select */
+		select {
+			width: 100%;
+			padding: 10px;
+			font-size: 16px;
+			margin-bottom: 10px;
+		}
+
+		/* Aumentar la separación entre elementos */
+		.mb-3 {
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Incluye el Navbar utilizando Thymeleaf -->
+	<div th:replace="navbar.html"></div>
+	<!-- Contenido de la página -->
+	<div class="container mt-4">
+		<h1>Actualizar Reserva</h1>
+		<hr>
+		<form id="formularioActualizarReserva" th:action="@{/reserva/actualizar/}" method="post">
+			<!-- Campo oculto para idReservaDTO -->
+			<input type="hidden" id="idReservaDTO" name="idReservaDTO" th:value="${idReservaDTO}" />
+			<<!-- Select para vuelos -->
+				<div class="mb-3">
+					<label for="seleccionVuelo" class="form-label">Selecciona un nuevo vuelo:</label>
+					<select id="idVueloDTO" name="idVueloDTO" size="5">
+						<option th:each="vuelo : ${listaVuelos}" th:value="${vuelo.idVueloDTO}"
+							th:text="'Origen: ' + ${vuelo.origen} + ' --- Destino: ' + ${vuelo.destino} + ' --- Fecha: ' + ${#dates.format(vuelo.fecha, 'yyyy-MM-dd HH:mm')}"
+							th:selected="${vuelo.idVueloDTO == idVueloDTO}"></option>
+					</select>
+				</div>
+
+				<!-- Select para pasajeros -->
+				<div class="mb-3">
+					<label for="seleccionPasajero" class="form-label">Selecciona un nuevo pasajero:</label>
+					<select id="idPasajeroDTO" name="idPasajeroDTO" size="5">
+						<option th:each="pasajero : ${listaPasajeros}" th:value="${pasajero.idPasajeroDTO}"
+							th:text="${pasajero.nombre + ' ' + pasajero.apellido}"
+							th:selected="${pasajero.idPasajeroDTO == idPasajeroDTO}"></option>
+					</select>
+				</div>
+
+				<!-- Campo para el asiento -->
+				<div class="mb-3">
+					<label for="asiento">Nuevo asiento:</label>
+					<input type="text" class="form-control" id="asiento" name="asiento" required
+						th:value="${asiento}" />
+				</div>
+				<button type="submit" class="btn btn-dark">Actualizar Reserva</button>
+
+
+				<!-- Bootstrap JS -->
+				<script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

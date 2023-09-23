@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,14 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.viewnext.kidaprojects.agenciaviajes.dto.ReservaDTO;
 import com.viewnext.kidaprojects.agenciaviajes.dto.ReservaSoloIdDTO;
-
 import com.viewnext.kidaprojects.agenciaviajes.service.ReservaService;
-
 import jakarta.persistence.EntityNotFoundException;
 
 @RestController
@@ -200,8 +195,8 @@ public class ReservaRestController {
 
 		} catch (EntityNotFoundException e) {
 
-			return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(RESERVA_NOT_FOUND);
-			
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(RESERVA_NOT_FOUND);
+
 		} catch (NumberFormatException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(INVALID_ID);
 		}
@@ -250,28 +245,30 @@ public class ReservaRestController {
 	 * @throws EntityNotFoundException si no se encuentra la reserva con el ID
 	 *                                 especificado.
 	 */
-	@PutMapping("/actualizar")
-	public ResponseEntity<?> updateReservaByIdVueloIdPasajeroAsiento(@RequestParam Integer idReserva,
-			@RequestParam Integer idVuelo, @RequestParam Integer idPasajero, @RequestParam String asiento) { // TO-DO
+	@PutMapping("/{idReservaDTO}")
+	public ResponseEntity<?> updateReservaById(@PathVariable String idReservaDTO,
+			@RequestBody ReservaSoloIdDTO reservaSoloIdDTO) {
+
 		try {
-			// Obtiene la reserva a actualizar utilizando los IDs proporcionados
-			ReservaDTO reservaDTOParaUpdate = reservaService.getReservaByIdVueloIdPasajeroAsiento(idVuelo, idPasajero,
+			ReservaDTO nuevaReservaDTO;
+
+			System.out.println("ESTAMOS EN EL REST: " + reservaSoloIdDTO.getAsiento());
+			Integer idReservaNumerico = Integer.parseInt(idReservaDTO);
+			Integer idVueloNumerico = Integer.parseInt(reservaSoloIdDTO.getIdVueloDTO());
+			Integer idPasajeroNumerico = Integer.parseInt(reservaSoloIdDTO.getIdPasajeroDTO());
+			String asiento = reservaSoloIdDTO.getAsiento();
+
+			nuevaReservaDTO = reservaService.updateReserva(idReservaNumerico, idPasajeroNumerico, idVueloNumerico,
 					asiento);
 
-			// Establece el ID de la reserva a actualizar
-			reservaDTOParaUpdate.setIdReservaDTO(String.valueOf(idReserva));
-
-			// Actualiza la reserva en el servicio y obtiene la versión actualizada
-			reservaDTOParaUpdate = reservaService.updateReservaById(idReserva, reservaDTOParaUpdate);
-
-			// Retorna una respuesta con status 200 (OK) y la reserva actualizada
-			return ResponseEntity.ok(reservaDTOParaUpdate);
+			return ResponseEntity.status(HttpStatus.CREATED).body(nuevaReservaDTO); // Agrega el objeto DTO como cuerpo de la respuesta
 
 		} catch (EntityNotFoundException e) {
-			// En caso de que no se encuentre la reserva, devuelve una respuesta 404 Not
-			// Found
-			// con un mensaje de error
+
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(RESERVA_NOT_FOUND);
+
+		} catch (NumberFormatException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(INVALID_ID);
 		}
 	}
 
