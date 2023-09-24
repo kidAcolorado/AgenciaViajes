@@ -23,6 +23,27 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
 
+/**
+ * Servicio que gestiona las operaciones relacionadas con las reservas.
+ *
+ * <p>
+ * La clase {@code ReservaService} proporciona métodos para buscar, crear, actualizar y eliminar reservas en la
+ * base de datos. También ofrece funcionalidad para obtener listas de reservas y obtener una reserva por su ID.
+ * </p>
+ *
+ * <p>
+ * Esta clase utiliza objetos {@code VueloService} y {@code PasajeroService} para interactuar con los vuelos y
+ * pasajeros asociados a las reservas. Además, utiliza un objeto {@code ReservaMapper} para realizar la conversión
+ * entre entidades {@code Reserva} y DTOs {@code ReservaDTO}.
+ * </p>
+ * 
+ *  <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ *
+ * @version 1.0
+ * @since 19 de septiembre de 2023
+ */
 @Service
 public class ReservaService implements ReservaRepository {
 
@@ -465,6 +486,6 @@ public class ReservaService implements ReservaRepository {
 		return null;
 	}
 
-	// MÉTODOS POR IMPLEMENTAR EN UN FÚTURO:
+	
 
 }

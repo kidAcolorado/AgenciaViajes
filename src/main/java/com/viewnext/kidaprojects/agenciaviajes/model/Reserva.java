@@ -8,6 +8,28 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+
+/**
+ * Clase que representa una reserva de vuelo en el sistema de gestión de viajes.
+ * 
+ * <p>
+ * La clase {@code Reserva} almacena información sobre una reserva de vuelo, incluyendo su
+ * identificador, número de asiento, el vuelo asociado y el pasajero que realizó la reserva.
+ * </p>
+ * 
+ * <p>
+ * Esta clase es una entidad JPA que se mapea a una tabla llamada "reservas" en la base de
+ * datos. El identificador de la reserva se genera automáticamente mediante una estrategia
+ * de generación de claves primarias.
+ * </p>
+ * 
+ * <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ *
+ * @version 1.0
+ * @since 19 de septiembre de 2023
+ */
 @Entity
 @Table(name = "reservas")
 public class Reserva {

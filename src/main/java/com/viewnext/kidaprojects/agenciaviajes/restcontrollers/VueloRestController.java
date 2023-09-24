@@ -22,6 +22,29 @@ import com.viewnext.kidaprojects.agenciaviajes.service.VueloService;
 
 import jakarta.persistence.EntityNotFoundException;
 
+/**
+ * Controlador REST que maneja las operaciones relacionadas con los vuelos.
+ *
+ * <p>
+ * La clase {@code VueloRestController} define una serie de endpoints para realizar operaciones CRUD
+ * relacionadas con los vuelos. Proporciona métodos para obtener todos los vuelos, obtener un vuelo por su ID,
+ * buscar vuelos por origen, destino y fecha, crear un nuevo vuelo, eliminar un vuelo por su ID y actualizar
+ * un vuelo por su ID.
+ * </p>
+ *
+ * <p>
+ * Además, este controlador maneja casos de error, como la respuesta con un código de estado 404 (Not Found) cuando
+ * un vuelo no se encuentra en la base de datos o un código de estado 400 (Bad Request) cuando se proporciona
+ * un ID no válido.
+ * </p>
+ *
+ * <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ * 
+ * @version 1.0
+ * @since 19 de septiembre de 2023
+ */
 @RestController
 @RequestMapping("/api/vuelo/")
 public class VueloRestController {

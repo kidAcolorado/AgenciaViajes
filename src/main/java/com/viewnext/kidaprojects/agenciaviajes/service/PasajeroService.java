@@ -17,6 +17,26 @@ import com.viewnext.kidaprojects.agenciaviajes.model.Pasajero;
 import com.viewnext.kidaprojects.agenciaviajes.repository.PasajeroRepository;
 import jakarta.persistence.EntityNotFoundException;
 
+/**
+ * Servicio que gestiona las operaciones relacionadas con los pasajeros.
+ *
+ * <p>
+ * La clase {@code PasajeroService} proporciona métodos para buscar, crear, actualizar y eliminar pasajeros en la
+ * base de datos. También ofrece funcionalidad para obtener listas de pasajeros y obtener un pasajero por su ID.
+ * </p>
+ *
+ * <p>
+ * Esta clase utiliza un objeto {@code PasajeroMapper} para realizar la conversión entre entidades {@code Pasajero} y
+ * DTOs {@code PasajeroDTO}.
+ * </p>
+ * 
+ *  <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ *
+ * @version 1.0
+ * @since 19 de septiembre de 2023
+ */
 @Service
 public class PasajeroService implements PasajeroRepository {
 

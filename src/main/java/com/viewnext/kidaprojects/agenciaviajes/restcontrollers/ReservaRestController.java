@@ -18,6 +18,30 @@ import com.viewnext.kidaprojects.agenciaviajes.dto.ReservaSoloIdDTO;
 import com.viewnext.kidaprojects.agenciaviajes.service.ReservaService;
 import jakarta.persistence.EntityNotFoundException;
 
+
+/**
+ * Controlador REST que maneja las operaciones relacionadas con las reservas.
+ *
+ * <p>
+ * La clase {@code ReservaRestController} define una serie de endpoints para realizar operaciones CRUD
+ * relacionadas con las reservas. Proporciona métodos para obtener todas las reservas, obtener una reserva por su ID,
+ * obtener reservas por el ID de vuelo o el ID de pasajero, crear una nueva reserva, eliminar una reserva por su ID
+ * y actualizar una reserva por su ID.
+ * </p>
+ *
+ * <p>
+ * Además, este controlador maneja casos de error, como la respuesta con un código de estado 404 (Not Found) cuando
+ * una reserva no se encuentra en la base de datos o un código de estado 400 (Bad Request) cuando se proporciona
+ * un ID no válido.
+ * </p>
+ * 
+ *  <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ *
+ * @version 1.0
+ * @since 19 de septiembre de 2023
+ */
 @RestController
 @RequestMapping("/api/reserva/")
 public class ReservaRestController {
@@ -26,8 +50,6 @@ public class ReservaRestController {
 	private ReservaService reservaService;
 
 	private static final String RESERVA_NOT_FOUND = "Reserva con las características indicadas no encontrada";
-	private static final String IDVUELO_NOT_FOUND = "Reserva con ID de Vuelo introducido no encontrada";
-	private static final String IDPASAJERO_NOT_FOUND = "Reserva con ID de Pasajero introducido no encontrada";
 	private static final String INVALID_ID = "Id Proporcionado inválido";
 
 	/**
@@ -125,7 +147,7 @@ public class ReservaRestController {
 			// En caso de que no se encuentren reservas para el vuelo especificado, retorna
 			// una respuesta con estado Not Found
 			// y un mensaje de error
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(IDVUELO_NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(RESERVA_NOT_FOUND);
 
 		} catch (NumberFormatException e) {
 			// En caso de que la conversión falle, responde con un código de estado 400 Bad
@@ -158,7 +180,7 @@ public class ReservaRestController {
 			// En caso de que no se encuentren reservas para el pasajero, retorna una
 			// respuesta con estado Not Found
 			// y un mensaje de error
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(IDPASAJERO_NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(RESERVA_NOT_FOUND);
 
 		} catch (NumberFormatException e) {
 			// En caso de que la conversión falle, responde con un código de estado 400 Bad
@@ -252,7 +274,7 @@ public class ReservaRestController {
 		try {
 			ReservaDTO nuevaReservaDTO;
 
-			System.out.println("ESTAMOS EN EL REST: " + reservaSoloIdDTO.getAsiento());
+			
 			Integer idReservaNumerico = Integer.parseInt(idReservaDTO);
 			Integer idVueloNumerico = Integer.parseInt(reservaSoloIdDTO.getIdVueloDTO());
 			Integer idPasajeroNumerico = Integer.parseInt(reservaSoloIdDTO.getIdPasajeroDTO());

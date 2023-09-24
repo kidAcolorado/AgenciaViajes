@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <!-- Bootstrap CSS u otros estilos -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- Agrega aquí cualquier otro estilo personalizado que desees -->
+</head>
+<body>
+	<!-- Incluye el Navbar utilizando Thymeleaf -->
+	<div th:replace="navbar.html"></div>
+
+    <div class="container mt-4">
+        <div class="alert alert-danger">
+            <h4>Error</h4>
+            <!-- Muestra el mensaje de error personalizado -->
+            <p th:text="${mensaje}"></p>
+        </div>
+        <!-- Agrega el GIF después del mensaje -->
+        <img src="/gif/BADREQUEST.gif" alt="Error 400 GIF">
+       
+    </div>
+
+    <!-- Bootstrap JS u otros scripts -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <!-- Agrega aquí cualquier otro script personalizado que desees -->
+</body>
+</html>

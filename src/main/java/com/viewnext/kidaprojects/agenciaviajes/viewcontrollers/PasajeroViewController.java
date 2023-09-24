@@ -1,7 +1,7 @@
 package com.viewnext.kidaprojects.agenciaviajes.viewcontrollers;
 
 import java.util.List;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,47 +14,80 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTO;
-
 import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTOSinId;
 
+
+/**
+ * Clase que representa un controlador para las vistas relacionadas con los pasajeros.
+ * 
+ * <p>
+ * Este controlador se encarga de gestionar las solicitudes relacionadas con los pasajeros
+ * en el sistema. Proporciona métodos para mostrar formularios, obtener y mostrar información
+ * sobre pasajeros, crear nuevos pasajeros, actualizar información de pasajeros y eliminar pasajeros
+ * utilizando el servicio web de pasajeros.
+ * </p>
+ * 
+ * <p>
+ * Las constantes definidas en esta clase se utilizan para mensajes de error y nombres de vistas
+ * en la interfaz de usuario.
+ * </p>
+ * 
+ * <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ *
+ * @version 1.0
+ * @since 19 de septiembre de 2023
+ */
 @Controller
 @RequestMapping("/pasajero/")
 public class PasajeroViewController {
+
+	// Constantes para los mensajes y nombres de las vistas
 	private static final String MENSAJE = "mensaje";
-	private static final String VISTA_ERROR = "vistaError"; 
+	private static final String VISTA_ERROR = "vistaError";
+	private static final String VISTA_NOT_FOUND = "vistaNotFound";
+	private static final String VISTA_BAD_REQUEST = "vistaBadRequest";
+
+	private static final String PASAJERO_NOT_FOUND = "Pasajero no encontrado";
+	private static final String PASAJERO_BAD_REQUEST = "Se esperaban unos argumentos distintos en la solictud";
+	private static final String PASAJERO_CREATED = "El Pasajero, con los datos que se muestran a continuación, fue creado exitosamente";
+	private static final String PASAJERO_UPDATED = "Datos del pasajero actualizados con éxito";
+	private static final String PASAJERO_DELETED = "Pasajero eliminado con éxito";
 	private static final String FALLO_CONEXION_WEBCLIENT = "Error al comunicarse con el servicio";
-	
+	private static final String FALLO_NULL = "La respuesta del servidor es nula o no se pudo mapear al tipo esperado.";
+
 	private final WebClient pasajeroWebClient;
 
-	/**
-	 * Constructor que recibe un WebClient para realizar peticiones al servicio web
-	 * de pasajeros.
-	 *
-	 * @param pasajeroWebClient El WebClient configurado para comunicarse con el
-	 *                          servicio web de pasajeros.
-	 */
-	public PasajeroViewController(WebClient pasajeroWebClient) {
-		this.pasajeroWebClient = pasajeroWebClient;
-	}
-	
 
-	
-	/**
+    /**
+     * Constructor que recibe un WebClient para realizar peticiones al servicio web
+     * de pasajeros.
+     *
+     * @param pasajeroWebClient El WebClient configurado para comunicarse con el
+     *                          servicio web de pasajeros.
+     */
+    public PasajeroViewController(WebClient pasajeroWebClient) {
+        this.pasajeroWebClient = pasajeroWebClient;
+    }
+
+    /**
      * Muestra la vista del formulario para buscar pasajeros.
      *
-     * @param model El modelo utilizado para realizar cualquier lógica adicional antes de mostrar el formulario.
+     * @param model El modelo utilizado para realizar cualquier lógica adicional
+     *              antes de mostrar el formulario.
      * @return El nombre de la vista a mostrar.
      */
     @GetMapping("/formbuscar")
     public String mostrarFormularioBusquedaPasajero(Model model) {
-        
         return "formularioBuscarPasajero";
     }
-    
+
     /**
      * Muestra la vista del formulario para crear un nuevo pasajero.
      *
-     * @param model El modelo utilizado para pasar un objeto PasajeroDTO vacío a la vista.
+     * @param model El modelo utilizado para pasar un objeto PasajeroDTOSinId vacío
+     *              a la vista.
      * @return El nombre de la vista a mostrar.
      */
     @GetMapping("/formcrear")
@@ -63,183 +96,199 @@ public class PasajeroViewController {
         return "formularioCrearPasajero";
     }
 
-	/**
-	 * Obtiene una lista de pasajeros desde el servicio web y muestra la vista que lista todos los pasajeros.
-	 *
-	 * @param model El modelo utilizado para pasar la lista de pasajeros a la vista.
-	 * @return El nombre de la vista a mostrar.
-	 */
+    /**
+     * Obtiene una lista de pasajeros desde el servicio web y muestra la vista que
+     * lista todos los pasajeros.
+     *
+     * @param model El modelo utilizado para pasar la lista de pasajeros a la vista.
+     * @return El nombre de la vista a mostrar.
+     */
     @GetMapping
     public String mostrarVistaListaPasajeros(Model model) {
         try {
             // Realiza una solicitud GET al servicio web para obtener una lista de pasajeros
-            List<PasajeroDTO> listaPasajeros = pasajeroWebClient.get()
-                    .retrieve()
-                    .bodyToFlux(PasajeroDTO.class) // Convierte la respuesta en un flux de PasajeroDTO
-                    .collectList() // Recolecta los elementos del flux en una lista
-                    .block(); // Bloquea hasta que la operación esté completa y devuelve la lista
+            ResponseEntity<List<PasajeroDTO>> response = pasajeroWebClient.get()
+            		.retrieve()
+                    .toEntityList(PasajeroDTO.class)
+                    .block();
 
-            // Agrega la lista de pasajeros al modelo para que esté disponible en la vista
-            model.addAttribute("pasajeros", listaPasajeros);
-
-            // Retorna el nombre de la vista que mostrará la lista de pasajeros
-            return "vistaMostrarPasajeros";
+            if (response != null && response.getStatusCode().is2xxSuccessful()) {
+                model.addAttribute("pasajeros", response.getBody());
+                return "vistaMostrarPasajeros";
+            } else {
+                model.addAttribute(MENSAJE, FALLO_NULL);
+                return VISTA_ERROR;
+            }
         } catch (WebClientResponseException e) {
-            // En caso de un error al comunicarse con el servicio web, agrega un mensaje de error al modelo y retorna una vista de error
+            // En caso de un error al comunicarse con el servicio web, agrega un mensaje de
+            // error al modelo y retorna una vista de error
             model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
             return VISTA_ERROR;
         }
     }
 
+    /**
+     * Obtiene un pasajero por su ID desde el servicio web y muestra la vista de un
+     * pasajero por su ID.
+     *
+     * @param id    El ID del pasajero a mostrar.
+     * @param model El modelo utilizado para pasar el pasajero a la vista.
+     * @return El nombre de la vista a mostrar.
+     */
+    @GetMapping("/id")
+    public String mostrarVistaPasajeroById(@RequestParam(name = "id") String id, Model model) {
+        try {
+            // Realiza una solicitud GET al servicio web para obtener los detalles del
+            // pasajero por su ID
+            ResponseEntity<PasajeroDTO> response = pasajeroWebClient.get()
+            		.uri("/{id}", id)
+            		.retrieve()
+                    .toEntity(PasajeroDTO.class)
+                    .block();
 
+            if (response != null && response.getStatusCode().is2xxSuccessful()) {
+                // Agrega el objeto PasajeroDTO al modelo para que esté disponible en la vista
+                model.addAttribute("pasajero", response.getBody());
+                return "vistaMostrarPasajeroById"; // Retorna el nombre de la vista de detalles del pasajero
+            } else {
+                model.addAttribute(MENSAJE, FALLO_NULL); // Agrega un mensaje de error al modelo
+                return VISTA_ERROR; // Retorna la vista de error en caso de una respuesta nula
+            }
 
-    
-	/**
-	 * Obtiene un pasajero por su ID desde el servicio web y muestra la vista de un pasajero por su ID.
-	 *
-	 * @param id    El ID del pasajero a mostrar.
-	 * @param model El modelo utilizado para pasar el pasajero a la vista.
-	 * @return El nombre de la vista a mostrar.
-	 */
-	@GetMapping("/id")
-	public String mostrarVistaPasajeroById(@RequestParam(name = "id") String id, Model model) {
-	    try {
-	        
-	        
-	        
-	        // Realiza una solicitud GET al servicio web para obtener los detalles del pasajero por su ID
-	        PasajeroDTO pasajero = pasajeroWebClient.get()
-	                .uri("/{id}", id)
-	                .retrieve()
-	                .bodyToMono(PasajeroDTO.class)
-	                .block();
-	        
-	        // Agrega el objeto PasajeroDTO al modelo para que esté disponible en la vista
-	        model.addAttribute("pasajero", pasajero);
-	        
-	        // Retorna el nombre de la vista que mostrará los detalles del pasajero
-	        return "vistaMostrarPasajeroById";
-	    
-	    } catch (WebClientResponseException e) {
-	        // En caso de un error al comunicarse con el servicio web, agrega un mensaje de error al modelo y retorna una vista de error
-	        model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
-	        return VISTA_ERROR;
-	    }
-	}
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                model.addAttribute(MENSAJE, PASAJERO_NOT_FOUND);
+                return VISTA_NOT_FOUND;
+            } else if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                model.addAttribute(MENSAJE, PASAJERO_BAD_REQUEST);
+                return VISTA_BAD_REQUEST;
+            } else {
+                model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
+                return VISTA_ERROR;
+            }
+        }
+    }
 
+    /**
+     * Crea un nuevo pasajero utilizando el servicio web de pasajeros.
+     *
+     * @param pasajeroDTOSinId El objeto PasajeroDTO con los datos del nuevo
+     *                         pasajero a crear.
+     * @param model            El modelo utilizado para pasar mensajes y objetos a
+     *                         la vista.
+     * @return El nombre de la vista a mostrar después de la creación.
+     */
+    @PostMapping("/crear/")
+    public String createPasajero(@ModelAttribute("pasajeroDTOSinId") PasajeroDTOSinId pasajeroDTOSinId, Model model) {
+        try {
+            // Realiza una solicitud POST al servicio web para crear un nuevo pasajero
+            ResponseEntity<PasajeroDTO> response = pasajeroWebClient.post()
+            		.contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(pasajeroDTOSinId)
+                    .retrieve()
+                    .toEntity(PasajeroDTO.class)
+                    .block();
 
-    
-    
+            if (response != null && response.getStatusCode().is2xxSuccessful()) {
+                model.addAttribute(MENSAJE, PASAJERO_CREATED);
+                model.addAttribute("nuevoPasajero", response.getBody());
+                return "vistaCrearPasajero";
+            } else {
+                model.addAttribute(MENSAJE, FALLO_NULL);
+                return VISTA_ERROR;
+            }
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                model.addAttribute(MENSAJE, PASAJERO_NOT_FOUND);
+                return VISTA_NOT_FOUND;
+            } else if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                model.addAttribute(MENSAJE, PASAJERO_BAD_REQUEST);
+                return VISTA_BAD_REQUEST;
+            } else {
+                model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
+                return VISTA_ERROR;
+            }
+        }
+    }
 
-	/**
-	 * Crea un nuevo pasajero utilizando el servicio web de pasajeros.
-	 *
-	 * @param pasajeroDTOSinId El objeto PasajeroDTO con los datos del nuevo pasajero a
-	 *                    crear.
-	 * @param model       El modelo utilizado para pasar mensajes y objetos a la
-	 *                    vista.
-	 * @return El nombre de la vista a mostrar después de la creación.
-	 */
-	@PostMapping("/crear/")
-	public String createPasajero(@ModelAttribute("pasajeroDTOSinId") PasajeroDTOSinId pasajeroDTOSinId, Model model) {
-		try {
-			ResponseEntity<Void> response = pasajeroWebClient.post()
-					.contentType(MediaType.APPLICATION_JSON)
-					.bodyValue(pasajeroDTOSinId)
-					.retrieve()
-					.toBodilessEntity()
-					.block();
-
-			 if (response != null && response.getStatusCode().is2xxSuccessful()) {
-		            model.addAttribute("mensaje", "El Pasajero, con los datos que se muestran a continuación, fue creado exitosamente");
-		            // Asignar el objeto PasajeroDTO al modelo
-		            model.addAttribute("nuevoPasajero", pasajeroDTOSinId);
-	           return "vistaCrearPasajero";
-			} else {
-				model.addAttribute(MENSAJE, "Error al crear el Pasajero");
-				return VISTA_ERROR;
-			}
-		} catch (WebClientResponseException e) {
-			model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
-			return VISTA_ERROR;
-		}
-	}
-
-	   
-    
     /**
      * Elimina un pasajero por su ID.
      *
      * @param id    El ID del pasajero a eliminar.
-     * @param model El modelo utilizado para pasar mensajes de éxito o error a la vista.
+     * @param model El modelo utilizado para pasar mensajes de éxito o error a la
+     *              vista.
      * @return El nombre de la vista a mostrar después de la eliminación.
      */
-	@PostMapping("/borrar/")
-	public String borrarPasajero(@RequestParam("idPasajeroDTO") String idPasajeroDTO, Model model) {
-	    try {
-	    	
-	    	
-	    	ResponseEntity<Void> response = pasajeroWebClient.delete()
-	    			.uri("/{id}", idPasajeroDTO)
-					.retrieve()
-					.toBodilessEntity()
-					.block();
+    @PostMapping("/borrar/")
+    public String borrarPasajero(@RequestParam("idPasajeroDTO") String idPasajeroDTO, Model model) {
+        try {
+            ResponseEntity<Void> response = pasajeroWebClient.delete()
+            		.uri("/{id}", idPasajeroDTO)
+            		.retrieve()
+                    .toBodilessEntity()
+                    .block();
 
-	        if (response != null && response.getStatusCode().is2xxSuccessful()) {
-	            model.addAttribute(MENSAJE, "Pasajero eliminado con éxito");
-	            
-	            return "VistaBorrar"; 
-	        } else {
-	            model.addAttribute(MENSAJE, "Error al borrar el Pasajero");
-	            return VISTA_ERROR; // Maneja otros errores posibles
-	        }
-	   
-	    } catch (WebClientResponseException e) {
-	        model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
-	        return VISTA_ERROR;
-	    }
-	}
-	
-	
-	
-	
-
+            if (response != null && response.getStatusCode().is2xxSuccessful()) {
+                model.addAttribute(MENSAJE, PASAJERO_DELETED);
+                return "VistaBorrar";
+            } else {
+                model.addAttribute(MENSAJE, FALLO_NULL);
+                return VISTA_ERROR; // Maneja otros errores posibles
+            }
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                model.addAttribute(MENSAJE, PASAJERO_NOT_FOUND);
+                return VISTA_NOT_FOUND;
+            } else if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                model.addAttribute(MENSAJE, PASAJERO_BAD_REQUEST);
+                return VISTA_BAD_REQUEST;
+            } else {
+                model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
+                return VISTA_ERROR;
+            }
+        }
+    }
 
     /**
      * Actualiza la información de un pasajero.
      *
-     * @param pasajeroDTO El objeto PasajeroDTO con los datos actualizados del pasajero.
-     * @param model       El modelo utilizado para pasar mensajes de éxito o error a la vista.
+     * @param pasajeroDTO El objeto PasajeroDTO con los datos actualizados del
+     *                    pasajero.
+     * @param model       El modelo utilizado para pasar mensajes de éxito o error a
+     *                    la vista.
      * @return El nombre de la vista a mostrar después de la actualización.
      */
     @PostMapping("/actualizar/")
     public String actualizarPasajero(@ModelAttribute("pasajeroDTO") PasajeroDTO pasajeroDTO, Model model) {
-		try {
-			
-			
-			ResponseEntity<PasajeroDTO> response = pasajeroWebClient.put()
-					.contentType(MediaType.APPLICATION_JSON)
-					.bodyValue(pasajeroDTO)
-					.retrieve()
-					.toEntity(PasajeroDTO.class)
-					.block();
+        try {
+            // Realiza una solicitud PUT al servicio web para actualizar los datos de un
+            // pasajero
+            ResponseEntity<PasajeroDTO> response = pasajeroWebClient.put()
+            		.contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(pasajeroDTO)
+                    .retrieve()
+                    .toEntity(PasajeroDTO.class)
+                    .block();
 
-			 if (response != null && response.getStatusCode().is2xxSuccessful()) {
-		            model.addAttribute("mensaje", "Datos del pasajero actualizados con éxito");
-		            // Asignar el objeto PasajeroDTO al modelo
-		            model.addAttribute("pasajero", response);
-		            
-		            
-	           return "vistaActualizarPasajero";
-			} else {
-				model.addAttribute(MENSAJE, "Error al actualizar el Pasajero");
-				return VISTA_ERROR;
-			}
-		} catch (WebClientResponseException e) {
-			model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
-			return VISTA_ERROR;
-		}
-	}
+            if (response != null && response.getStatusCode().is2xxSuccessful()) {
+                model.addAttribute(MENSAJE, PASAJERO_UPDATED);
+                model.addAttribute("pasajero", response.getBody());
+                return "vistaActualizarPasajero";
+            } else {
+                model.addAttribute(MENSAJE, FALLO_NULL);
+                return VISTA_ERROR;
+            }
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                model.addAttribute(MENSAJE, PASAJERO_NOT_FOUND);
+                return VISTA_NOT_FOUND;
+            } else if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                model.addAttribute(MENSAJE, PASAJERO_BAD_REQUEST);
+                return VISTA_BAD_REQUEST;
+            } else {
+                model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
+                return VISTA_ERROR;
+            }
+        }
+    }
 }
-
-

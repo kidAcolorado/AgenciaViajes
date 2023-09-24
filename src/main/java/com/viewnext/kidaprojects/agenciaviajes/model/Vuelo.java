@@ -9,6 +9,27 @@ import jakarta.persistence.Table;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * Clase que representa un vuelo en el sistema de gestión de viajes.
+ * 
+ * <p>
+ * La clase {@code Vuelo} almacena información sobre un vuelo, incluyendo su identificador,
+ * origen, destino y fecha de partida.
+ * </p>
+ * 
+ * <p>
+ * Esta clase es una entidad JPA que se mapea a una tabla llamada "vuelos" en la base de datos.
+ * El identificador del vuelo se genera automáticamente mediante una estrategia de generación de
+ * claves primarias.
+ * </p>
+ * 
+ * <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ *
+ * @version 1.0
+ * @since 19 de septiembre de 2023
+ */
 @Entity
 @Table(name = "vuelos")
 public class Vuelo {

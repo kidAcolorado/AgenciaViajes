@@ -8,6 +8,20 @@ import com.viewnext.kidaprojects.agenciaviajes.model.Vuelo;
 
 /**
  * Clase que proporciona métodos para mapear entre objetos Vuelo y VueloDTO.
+ * 
+ * <p>
+ * La clase {@code VueloMapper} se encarga de convertir objetos entre la entidad {@code Vuelo}
+ * y su representación de transferencia de datos {@code VueloDTO}. Esta clase incluye métodos para
+ * realizar estas conversiones, incluyendo la conversión entre el identificador del vuelo y su
+ * versión en el DTO.
+ * </p>
+ * 
+ * <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ *
+ * @version 1.0
+ * @since 19 de septiembre de 2023
  */
 @Component
 public class VueloMapper {

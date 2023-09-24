@@ -9,13 +9,18 @@
     <!-- Agrega aquí cualquier otro estilo personalizado que desees -->
 </head>
 <body>
+	<!-- Incluye el Navbar utilizando Thymeleaf -->
+	<div th:replace="navbar.html"></div>
+
     <div class="container mt-4">
         <div class="alert alert-danger">
             <h4>Error</h4>
             <!-- Muestra el mensaje de error personalizado -->
             <p th:text="${mensaje}"></p>
         </div>
-        <!-- Agrega enlaces u otra información adicional si es necesario -->
+         <!-- Agrega el GIF después del mensaje -->
+        <img src="/gif/CONNECTIONERROR.gif" alt="Error Conexión GIF">
+       
     </div>
 
     <!-- Bootstrap JS u otros scripts -->

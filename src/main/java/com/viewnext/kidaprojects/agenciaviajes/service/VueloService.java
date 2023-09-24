@@ -17,6 +17,22 @@ import com.viewnext.kidaprojects.agenciaviajes.model.Vuelo;
 import com.viewnext.kidaprojects.agenciaviajes.repository.VueloRepository;
 import jakarta.persistence.EntityNotFoundException;
 
+/**
+ * Servicio que gestiona las operaciones relacionadas con los vuelos.
+ *
+ * <p>
+ * La clase {@code VueloService} proporciona métodos para buscar, crear, actualizar y eliminar vuelos en la base de datos.
+ * También ofrece funcionalidad para obtener listas de vuelos y obtener un vuelo por su ID. Utiliza un objeto
+ * {@code VueloMapper} para realizar la conversión entre entidades {@code Vuelo} y DTOs {@code VueloDTO}.
+ * </p>
+ * 
+ *  <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ *
+ * @version 1.0
+ * @since 19 de septiembre de 2023
+ */
 @Service
 public class VueloService implements VueloRepository {
 

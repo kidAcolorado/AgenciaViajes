@@ -21,6 +21,29 @@ import com.viewnext.kidaprojects.agenciaviajes.service.PasajeroService;
 
 import jakarta.persistence.EntityNotFoundException;
 
+/**
+ * Controlador REST que maneja las operaciones relacionadas con los pasajeros.
+ * 
+ * <p>
+ * La clase {@code PasajeroRestController} define una serie de endpoints para realizar operaciones CRUD
+ * relacionadas con los pasajeros. Proporciona métodos para obtener todos los pasajeros, obtener un pasajero
+ * por su ID, crear un nuevo pasajero, eliminar un pasajero por su ID, actualizar un pasajero por su ID y eliminar
+ * un pasajero a partir de los datos proporcionados en el cuerpo de la solicitud.
+ * </p>
+ *
+ * <p>
+ * Además, este controlador maneja casos de error, como la respuesta con un código de estado 404 (Not Found) cuando
+ * un pasajero no se encuentra en la base de datos o un código de estado 400 (Bad Request) cuando se proporciona
+ * un ID no válido.
+ * </p>
+ * 
+ *  <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ *
+ * @version 1.0
+ * @since 19 de septiembre de 2023
+ */
 @RestController
 @RequestMapping("/api/pasajero/")
 public class PasajeroRestController {

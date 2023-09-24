@@ -2,6 +2,7 @@ package com.viewnext.kidaprojects.agenciaviajes.viewcontrollers;
 
 
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,13 +19,44 @@ import com.viewnext.kidaprojects.agenciaviajes.dto.VueloDTOSinId;
 
 import java.util.List;
 
+/**
+ * Clase que representa un controlador para las vistas relacionadas con las operaciones de vuelo.
+ * 
+ * <p>
+ * Este controlador se encarga de gestionar las solicitudes relacionadas con las operaciones de vuelo
+ * en el sistema. Proporciona métodos para mostrar formularios, obtener y mostrar información
+ * sobre vuelos, crear nuevos vuelos, actualizar información de vuelos y eliminar vuelos
+ * utilizando el servicio web de vuelos.
+ * </p>
+ * 
+ * <p>
+ * Las constantes definidas en esta clase se utilizan para mensajes de error y nombres de vistas
+ * en la interfaz de usuario.
+ * </p>
+ * 
+ * <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ *
+ * @version 1.0
+ * @since 19 de septiembre de 2023
+ */
 @Controller
 @RequestMapping("/vuelo/")
 public class VueloViewController {
+	// Constantes para los mensajes y nombres de las vistas
     private static final String MENSAJE = "mensaje";
-    private static final String VISTA_ERROR = "vistaError";
-    private static final String ID_ERRONEO = "ID de vuelo no válido";
+    private static final String VISTA_ERROR = "vistaError"; 
+    private static final String VISTA_NOT_FOUND = "vistaNotFound";
+    private static final String VISTA_BAD_REQUEST = "vistaBadRequest";
+    
+    private static final String VUELO_NOT_FOUND = "Vuelo no encontrado";
+    private static final String VUELO_BAD_REQUEST = "Se esperaban unos argumentos distintos en la solictud";
+    private static final String VUELO_CREATED = "El Vuelo, con los datos que se muestran a continuación, fue creado exitosamente";
+    private static final String VUELO_UPDATED = "Datos del Vuelo actualizados con éxito";
+    private static final String VUELO_DELETED = "Vuelo eliminado con éxito";
     private static final String FALLO_CONEXION_WEBCLIENT = "Error al comunicarse con el servicio";
+    private static final String FALLO_NULL = "La respuesta del servidor es nula o no se pudo mapear al tipo esperado.";
 
     private final WebClient vueloWebClient;
 
@@ -77,15 +109,19 @@ public class VueloViewController {
     public String mostrarVistaListaVuelos(Model model) {
         try {
             // Realiza una solicitud GET al servicio web para obtener una lista de vuelos
-            List<VueloDTO> listaVuelos = vueloWebClient.get()
+           ResponseEntity<List<VueloDTO>>  response = vueloWebClient.get()
                     .retrieve()
-                    .bodyToFlux(VueloDTO.class)
-                    .collectList()
+                    .toEntityList(VueloDTO.class)
                     .block();
 
-            model.addAttribute("vuelos", listaVuelos);
-
-            return "vistaMostrarVuelos";
+           if (response != null && response.getStatusCode().is2xxSuccessful()) {
+               
+               model.addAttribute("vuelos", response.getBody());
+               return "vistaMostrarVuelos";
+           } else {
+               model.addAttribute(MENSAJE, FALLO_NULL);
+               return VISTA_ERROR;
+           }
         } catch (WebClientResponseException e) {
             model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
             return VISTA_ERROR;
@@ -93,8 +129,7 @@ public class VueloViewController {
     }
 
     /**
-     * Obtiene un vuelo por su ID desde el servicio web y muestra la vista de un
-     * vuelo por su ID.
+     * Obtiene un vuelo por su ID desde el servicio web y muestra la vista de un vuelo por su ID.
      *
      * @param id    El ID del vuelo a mostrar.
      * @param model El modelo utilizado para pasar el vuelo a la vista.
@@ -103,26 +138,46 @@ public class VueloViewController {
     @GetMapping("/id")
     public String mostrarVistaVueloById(@RequestParam(name = "id") String id, Model model) {
         try {
-            Integer idNumerico = Integer.parseInt(id);
-
-            VueloDTO vuelo = vueloWebClient.get()
-                    .uri("/{id}", idNumerico)
+            // Realiza una solicitud GET al servicio web para obtener los detalles del vuelo por su ID
+            ResponseEntity<VueloDTO> response = vueloWebClient.get()
+                    .uri("/{id}", id)
                     .retrieve()
-                    .bodyToMono(VueloDTO.class)
+                    .toEntity(VueloDTO.class)
                     .block();
 
-            model.addAttribute("vuelo", vuelo);
-
-            return "vistaMostrarVueloById";
-        } catch (NumberFormatException e) {
-            model.addAttribute(MENSAJE, ID_ERRONEO);
-            return VISTA_ERROR;
+            if (response != null && response.getStatusCode().is2xxSuccessful()) {
+                // Agrega el objeto VueloDTO al modelo para que esté disponible en la vista
+                model.addAttribute("vuelo", response.getBody());
+                return "vistaMostrarVueloById"; // Retorna el nombre de la vista de detalles del vuelo
+            } else {
+                model.addAttribute(MENSAJE, FALLO_NULL); // Agrega un mensaje de error al modelo
+                return VISTA_ERROR; // Retorna la vista de error en caso de una respuesta nula
+            }
         } catch (WebClientResponseException e) {
-            model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
-            return VISTA_ERROR;
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                model.addAttribute(MENSAJE, VUELO_NOT_FOUND);
+                return VISTA_NOT_FOUND;
+            } else if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                model.addAttribute(MENSAJE, VUELO_BAD_REQUEST);
+                return VISTA_BAD_REQUEST;
+            } else {
+                model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
+                return VISTA_ERROR;
+            }
         }
     }
-    
+
+
+
+    /**
+     * Obtiene y muestra la vista de vuelos filtrados por origen, destino y fecha.
+     *
+     * @param origen El origen de los vuelos a buscar.
+     * @param destino El destino de los vuelos a buscar.
+     * @param fecha La fecha de los vuelos a buscar.
+     * @param model El modelo utilizado para pasar la lista de vuelos filtrados a la vista.
+     * @return El nombre de la vista a mostrar.
+     */
     @GetMapping("/params")
 	public String mostrarVistaVueloByOrigenDestinoFecha(@RequestParam String origen, @RequestParam String destino, @RequestParam String fecha, Model model) {
 	    try {
@@ -134,20 +189,27 @@ public class VueloViewController {
 	                 .toEntityList(VueloDTO.class)
 	                 .block();
 
-	         if (response.getStatusCode().is2xxSuccessful()) {
+	         if (response != null && response.getStatusCode() .is2xxSuccessful()){
 	             // Obtener la lista de VueloDTO de la respuesta
-	             List<VueloDTO> vuelos = response.getBody();
-	             model.addAttribute("vuelos", vuelos);
+	             model.addAttribute("vuelos", response.getBody());
 
 	             return "vistaMostrarVuelos"; // Redireccionar a la vista adecuada
 	         } else {
-	        	 model.addAttribute(MENSAJE, "estoy aqui");
+	        	 model.addAttribute(MENSAJE, FALLO_NULL);
 	             
 	             return VISTA_ERROR; // Manejar otros errores posibles
 	         }
 	    } catch (WebClientResponseException e) {
-            model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
-            return VISTA_ERROR;
+            if(e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                model.addAttribute(MENSAJE, VUELO_NOT_FOUND);
+                return VISTA_NOT_FOUND;
+            } else if(e.getStatusCode() == HttpStatus.BAD_REQUEST){
+                model.addAttribute(MENSAJE, VUELO_BAD_REQUEST);
+                return VISTA_BAD_REQUEST;
+            } else {
+                model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
+                return VISTA_ERROR;
+            }
         }
 	 }
 
@@ -163,24 +225,32 @@ public class VueloViewController {
     @PostMapping("/crear/")
     public String createVuelo(@ModelAttribute("vueloDTOSinId") VueloDTOSinId vueloDTOSinId, Model model) {
         try {
-            ResponseEntity<Void> response = vueloWebClient.post()
+            ResponseEntity<VueloDTO> response = vueloWebClient.post()
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(vueloDTOSinId)
                     .retrieve()
-                    .toBodilessEntity()
+                    .toEntity(VueloDTO.class)
                     .block();
 
             if (response != null && response.getStatusCode().is2xxSuccessful()) {
-                model.addAttribute(MENSAJE, "El Vuelo fue creado exitosamente");
-                model.addAttribute("nuevoVuelo", vueloDTOSinId);
+                model.addAttribute(MENSAJE, VUELO_CREATED);
+                model.addAttribute("nuevoVuelo", response.getBody());
                 return "VistaCrearVuelo"; // Redireccionar a la lista de vuelos
             } else {
-                model.addAttribute(MENSAJE, "Error al crear el Vuelo");
+                model.addAttribute(MENSAJE, FALLO_NULL);
                 return VISTA_ERROR;
             }
         } catch (WebClientResponseException e) {
-            model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
-            return VISTA_ERROR;
+            if(e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                model.addAttribute(MENSAJE, VUELO_NOT_FOUND);
+                return VISTA_NOT_FOUND;
+            } else if(e.getStatusCode() == HttpStatus.BAD_REQUEST){
+                model.addAttribute(MENSAJE, VUELO_BAD_REQUEST);
+                return VISTA_BAD_REQUEST;
+            } else {
+                model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
+                return VISTA_ERROR;
+            }
         }
     }
 
@@ -195,28 +265,31 @@ public class VueloViewController {
     public String borrarVuelo(@RequestParam("idVueloDTO") String idVueloDTO, Model model) {
         try {
             
-        	
-
-            ResponseEntity<Void> response = vueloWebClient.delete()
+        	ResponseEntity<Void> response = vueloWebClient.delete()
                     .uri("/{id}", idVueloDTO)
                     .retrieve()
                     .toBodilessEntity()
                     .block();
 
             if (response != null && response.getStatusCode().is2xxSuccessful()) {
-                model.addAttribute(MENSAJE, "Vuelo eliminado con éxito");
+                model.addAttribute(MENSAJE, VUELO_DELETED);
                 return "VistaBorrar";
             } else {
-                model.addAttribute(MENSAJE, "Error al borrar el Vuelo");
+                model.addAttribute(MENSAJE, FALLO_NULL);
                 return VISTA_ERROR; // Maneja otros errores posibles
             }
-        } catch (NumberFormatException e) {
-            model.addAttribute(MENSAJE, ID_ERRONEO);
-            return VISTA_ERROR;
         } catch (WebClientResponseException e) {
-            model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
-            return VISTA_ERROR;
-        }
+			if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+				model.addAttribute(MENSAJE, VUELO_NOT_FOUND);
+				return VISTA_NOT_FOUND;
+			} else if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+				model.addAttribute(MENSAJE, VUELO_BAD_REQUEST);
+				return VISTA_BAD_REQUEST;
+			} else {
+				model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
+				return VISTA_ERROR;
+			}
+		}
     }
 
     /**
@@ -239,24 +312,28 @@ public class VueloViewController {
                     .block();
 
             if (response != null && response.getStatusCode().is2xxSuccessful()) {
-                model.addAttribute(MENSAJE, "Datos del vuelo actualizados con éxito");
+                model.addAttribute(MENSAJE, VUELO_UPDATED);
                 // Asigna el objeto VueloDTO actualizado al modelo
-                model.addAttribute("vuelo", response);
+                model.addAttribute("vuelo", response.getBody());
                 
                 
                 return "VistaActualizarVuelo";
             } else {
-                model.addAttribute(MENSAJE, "Error al actualizar el Vuelo");
+                model.addAttribute(MENSAJE, FALLO_NULL);
                 return VISTA_ERROR;
             }
-        } catch (NumberFormatException e) {
-            model.addAttribute(MENSAJE, "Error al actualizar el Vuelo");
-            return VISTA_ERROR;
         } catch (WebClientResponseException e) {
-            model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
-            return VISTA_ERROR;
-        }
+			if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+				model.addAttribute(MENSAJE, VUELO_NOT_FOUND);
+				return VISTA_NOT_FOUND;
+			} else if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+				model.addAttribute(MENSAJE, VUELO_BAD_REQUEST);
+				return VISTA_BAD_REQUEST;
+			} else {
+				model.addAttribute(MENSAJE, FALLO_CONEXION_WEBCLIENT);
+				return VISTA_ERROR;
+			}
+		}
     }
-
 }
 

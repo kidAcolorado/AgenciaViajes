@@ -7,6 +7,24 @@ import com.viewnext.kidaprojects.agenciaviajes.model.Reserva;
 
 /**
  * Clase que proporciona métodos para mapear entre objetos Reserva y ReservaDTO.
+ * 
+ * <p>
+ * La clase {@code ReservaMapper} se encarga de convertir objetos entre la entidad {@code Reserva}
+ * y su representación de transferencia de datos {@code ReservaDTO}. Para realizar estas conversiones,
+ * se utiliza el mapper de Vuelo ({@code VueloMapper}) y el mapper de Pasajero ({@code PasajeroMapper}).
+ * </p>
+ * 
+ * <p>
+ * El constructor de esta clase recibe instancias de {@code VueloMapper} y {@code PasajeroMapper} para
+ * poder llevar a cabo las conversiones entre objetos relacionados con vuelos y pasajeros.
+ * </p>
+ * 
+ * <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ *
+ * @version 1.0
+ * @since 19 de septiembre de 2023
  */
 @Component
 public class ReservaMapper {

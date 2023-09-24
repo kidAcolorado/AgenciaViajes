@@ -7,7 +7,23 @@ import com.viewnext.kidaprojects.agenciaviajes.dto.PasajeroDTOSinId;
 import com.viewnext.kidaprojects.agenciaviajes.model.Pasajero;
 
 /**
- * Clase que proporciona métodos para mapear entre objetos Pasajero y PasajeroDTO.
+ * La clase {@code PasajeroMapper} proporciona métodos para mapear objetos entre la entidad
+ * {@code Pasajero} y su representación de transferencia de datos {@code PasajeroDTO}. También
+ * proporciona métodos para mapear a partir de {@code PasajeroDTO} sin identificador.
+ * 
+ * <p>
+ * Esta clase se utiliza para convertir objetos entre las capas de la aplicación, permitiendo la transferencia
+ * de datos entre la capa de servicios y la capa de vista. Proporciona métodos para convertir un objeto
+ * {@code Pasajero} en un objeto {@code PasajeroDTO}, un objeto {@code PasajeroDTO} en un objeto
+ * {@code Pasajero}, y también para convertir un objeto {@code PasajeroDTOSinId} en un objeto {@code Pasajero}.
+ * </p>
+ * 
+  <p>
+ * El autor de esta clase es Víctor Colorado "Kid A".
+ * </p>
+ *
+ * @version 1.0
+ * @since 19 de septiembre de 2023
  */
 @Component
 public class PasajeroMapper {
