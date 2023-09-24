@@ -22,6 +22,26 @@ Gestiona las vistas relacionadas con las operaciones de reserva. Permite a los u
 
 Controla las vistas relacionadas con las operaciones de vuelo. Proporciona métodos para mostrar formularios, obtener y mostrar información sobre vuelos, crear nuevos vuelos, actualizar información de vuelos y eliminar vuelos utilizando el servicio web de vuelos.
 
+### Controladores Rest
+
+Además de los controladores mencionados anteriormente, la aplicación también incluye controladores REST para la comunicación con el servicio web. Estos controladores manejan solicitudes RESTful y devuelven datos en formato JSON.
+
+- **`PasajeroRestController`**: Este controlador REST gestiona las solicitudes relacionadas con los pasajeros a través de la API REST. Permite obtener información sobre pasajeros y crear nuevos pasajeros.
+
+- **`ReservaRestController`**: Maneja las solicitudes REST relacionadas con las reservas de vuelos. Proporciona endpoints para crear y consultar reservas.
+
+- **`VueloRestController`**: Controla las operaciones REST relacionadas con los vuelos, incluyendo la búsqueda de vuelos y la gestión de la información de vuelos.
+
+### Servicios
+
+Los servicios son componentes clave de la aplicación que se encargan de la lógica de negocio y la comunicación con el servicio web externo. Cada controlador utiliza servicios para realizar operaciones relacionadas con los pasajeros, las reservas y los vuelos.
+
+- **`PasajeroService`**: Este servicio se encarga de la lógica de negocio relacionada con los pasajeros. Proporciona métodos para interactuar con el servicio web de pasajeros, como obtener información de pasajeros y crear nuevos registros de pasajeros.
+
+- **`ReservaService`**: Gestiona la lógica de negocio de las reservas de vuelos. Permite crear nuevas reservas y obtener información sobre reservas existentes.
+
+- **`VueloService`**: Controla la lógica de negocio relacionada con los vuelos. Proporciona métodos para buscar vuelos, obtener detalles de vuelos y administrar la información de vuelos.
+
 ## Configuración del Proyecto
 
 Antes de ejecutar la aplicación, asegúrate de configurar correctamente los siguientes componentes:
