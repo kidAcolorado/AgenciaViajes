@@ -1,0 +1,112 @@
+create database agenciaviajes;
+use agenciaviajes;
+
+
+INSERT INTO pasajeros (nombre, apellido, fecha_nacimiento) VALUES
+    ('Juan', 'Pérez', '1990-05-15'),
+    ('María', 'García', '1985-02-20'),
+    ('Carlos', 'López', '1995-07-10'),
+    ('Laura', 'Martínez', '1980-11-30'),
+    ('Pedro', 'Sánchez', '1978-09-25'),
+    ('Ana', 'Rodríguez', '1992-03-18'),
+    ('Miguel', 'Fernández', '1987-06-22'),
+    ('Isabel', 'Díaz', '1998-01-05'),
+    ('Sergio', 'Gómez', '1983-08-12'),
+    ('Elena', 'Hernández', '1975-04-09'),
+    ('Ricardo', 'Torres', '1993-12-28'),
+    ('Carmen', 'Luna', '1989-10-14'),
+    ('Luis', 'Vargas', '1981-07-07'),
+    ('Raquel', 'Soto', '1991-09-03'),
+    ('Javier', 'Ortega', '1976-06-19'),
+    ('Silvia', 'Morales', '1984-04-02'),
+    ('Diego', 'Navarro', '1997-02-08'),
+    ('Natalia', 'Ramírez', '1986-03-25'),
+    ('Alejandro', 'Jiménez', '1994-08-11'),
+    ('Lorena', 'Castillo', '1979-01-17');
+
+-- Insertar datos en la tabla de vuelos
+INSERT INTO vuelos (origen, destino, fecha) VALUES
+    ('Nueva York', 'Los Ángeles', '2023-10-01'),
+    ('Chicago', 'Miami', '2023-10-05'),
+    ('San Francisco', 'Las Vegas', '2023-10-10'),
+    ('Houston', 'Denver', '2023-10-15'),
+    ('Orlando', 'Seattle', '2023-10-20'),
+    ('Boston', 'Dallas', '2023-10-25'),
+    ('Atlanta', 'Phoenix', '2023-10-30'),
+    ('Miami', 'Chicago', '2023-11-02'),
+    ('Los Ángeles', 'Nueva York', '2023-11-07'),
+    ('Las Vegas', 'San Francisco', '2023-11-12'),
+    ('Denver', 'Houston', '2023-11-17'),
+    ('Seattle', 'Orlando', '2023-11-22'),
+    ('Dallas', 'Boston', '2023-11-27'),
+    ('Phoenix', 'Atlanta', '2023-12-01'),
+    ('Chicago', 'Miami', '2023-12-05'),
+    ('Nueva York', 'Los Ángeles', '2023-12-10'),
+    ('San Francisco', 'Las Vegas', '2023-12-15'),
+    ('Houston', 'Denver', '2023-12-20'),
+    ('Orlando', 'Seattle', '2023-12-25'),
+    ('Boston', 'Dallas', '2023-12-30');
+
+
+-- Reservas para el primer pasajero
+INSERT INTO reservas (asiento, id_pasajero, id_vuelo)
+VALUES
+    ('A1', 1, 1),
+    ('A2', 1, 2);
+
+-- Reservas para el segundo pasajero
+INSERT INTO reservas (asiento, id_pasajero, id_vuelo)
+VALUES
+    ('A1', 2, 3),
+    ('A2', 2, 4);
+
+-- Reservas para el tercer pasajero
+INSERT INTO reservas (asiento, id_pasajero, id_vuelo)
+VALUES
+    ('A1', 3, 5),
+    ('A2', 3, 6);
+
+-- Reservas para el cuarto pasajero
+INSERT INTO reservas (asiento, id_pasajero, id_vuelo)
+VALUES
+    ('A1', 4, 7),
+    ('A2', 4, 8);
+
+-- Reservas para el quinto pasajero
+INSERT INTO reservas (asiento, id_pasajero, id_vuelo)
+VALUES
+    ('A1', 5, 9),
+    ('A2', 5, 10);
+
+-- Reservas para el sexto pasajero
+INSERT INTO reservas (asiento, id_pasajero, id_vuelo)
+VALUES
+    ('A1', 6, 11),
+    ('A2', 6, 12);
+
+-- Reservas para el séptimo pasajero
+INSERT INTO reservas (asiento, id_pasajero, id_vuelo)
+VALUES
+    ('A1', 7, 13),
+    ('A2', 7, 14);
+
+-- Reservas para el octavo pasajero
+INSERT INTO reservas (asiento, id_pasajero, id_vuelo)
+VALUES
+    ('A1', 8, 15),
+    ('A2', 8, 16);
+
+-- Reservas para el noveno pasajero
+INSERT INTO reservas (asiento, id_pasajero, id_vuelo)
+VALUES
+    ('A1', 9, 17),
+    ('A2', 9, 18);
+
+-- Reservas para el décimo pasajero
+INSERT INTO reservas (asiento, id_pasajero, id_vuelo)
+VALUES
+    ('A1', 10, 19),
+    ('A2', 10, 20);
+
+-- UNA VEZ EJECUTADA LA APP SPRING HAREMOS UN ALTER TABLE RESERVA
+-- AÑADIREMOS DELETE ON CASCADE A LAS FK ID_VUELO Y ID_PASAJERO DE LA TABLA RESERVAS
