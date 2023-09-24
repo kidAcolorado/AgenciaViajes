@@ -10,9 +10,9 @@ La aplicación se basa en un conjunto de controladores que gestionan las solicit
 
 ### Controladores View
 
-- :✈️: **`PasajeroViewController`**: Este controlador se encarga de las vistas relacionadas con los pasajeros. Proporciona métodos para mostrar formularios, obtener y mostrar información sobre pasajeros, crear nuevos pasajeros, actualizar información de pasajeros y eliminar pasajeros utilizando el servicio web de pasajeros.
+- ✈️ **`PasajeroViewController`**: Este controlador se encarga de las vistas relacionadas con los pasajeros. Proporciona métodos para mostrar formularios, obtener y mostrar información sobre pasajeros, crear nuevos pasajeros, actualizar información de pasajeros y eliminar pasajeros utilizando el servicio web de pasajeros.
 
-- :✈️: **`ReservaViewController`**: Gestiona las vistas relacionadas con las operaciones de reserva. Permite a los usuarios buscar vuelos, ver detalles de vuelos y realizar reservas.
+- ✈️ **`ReservaViewController`**: Gestiona las vistas relacionadas con las operaciones de reserva. Permite a los usuarios buscar vuelos, ver detalles de vuelos y realizar reservas.
 
 - :airplane: **`VueloViewController`**: Controla las vistas relacionadas con las operaciones de vuelo. Proporciona métodos para mostrar formularios, obtener y mostrar información sobre vuelos, crear nuevos vuelos, actualizar información de vuelos y eliminar vuelos utilizando el servicio web de vuelos.
 
