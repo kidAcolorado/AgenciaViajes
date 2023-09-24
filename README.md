@@ -65,6 +65,23 @@ Asegúrate de tener instalados los siguientes componentes:
 
 4. Abre un navegador web y accede a la aplicación en la URL correspondiente (por ejemplo, `http://localhost:8080`).
 
+Notas de uso:
+Adjunto también el Script del SQL para la base de datos.
+
+En mi app Spring las configuraciones de acceso a la base de datos son:
+
+spring.jpa.database=MYSQL
+spring.datasource.url=jdbc:mysql://localhost:3306/agenciaviajes
+spring.datasource.username=agencia_viajes_user
+spring.datasource.password=Agencia_viajes_user1
+
+
+Una vez corremos la app de Spring desde MySql debemos asegurarnos de cambiar una cosa en las FK. Deberemos hacer un Alter table de la tabla reservas, para seleccionar la opción DELETE ON CASCADE en las FK id_vuelo y id_pasajero.
+
+
+No he sido capaz de configurar las dependencias del POM.xml para poder ejecutar los Tests así que los tengo comentados a la espera de aprender como hacerlo.
+
+
 ## Contribuciones
 
 Si deseas contribuir a este proyecto, por favor sigue estas pautas:
