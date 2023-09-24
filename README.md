@@ -1,6 +1,4 @@
-# AgenciaViajes
-
-# Proyecto de Gestión de Vuelos
+# AgenciaViajes - Proyecto de Gestión de Vuelos
 
 Este proyecto es una aplicación web de gestión de vuelos que permite a los usuarios buscar, crear, actualizar y eliminar información de vuelos utilizando un servicio web.
 
@@ -10,15 +8,15 @@ La aplicación se basa en un conjunto de controladores que gestionan las solicit
 
 ### Controladores Principales
 
-#### `PasajeroViewController`
+#### :rocket: `PasajeroViewController`
 
 Este controlador se encarga de las vistas relacionadas con los pasajeros. Proporciona métodos para mostrar formularios, obtener y mostrar información sobre pasajeros, crear nuevos pasajeros, actualizar información de pasajeros y eliminar pasajeros utilizando el servicio web de pasajeros.
 
-#### `ReservaViewController`
+#### :airplane: `ReservaViewController`
 
 Gestiona las vistas relacionadas con las operaciones de reserva. Permite a los usuarios buscar vuelos, ver detalles de vuelos y realizar reservas.
 
-#### `VueloViewController`
+#### :flight_departure: `VueloViewController`
 
 Controla las vistas relacionadas con las operaciones de vuelo. Proporciona métodos para mostrar formularios, obtener y mostrar información sobre vuelos, crear nuevos vuelos, actualizar información de vuelos y eliminar vuelos utilizando el servicio web de vuelos.
 
@@ -36,11 +34,11 @@ Además de los controladores mencionados anteriormente, la aplicación también 
 
 Los servicios son componentes clave de la aplicación que se encargan de la lógica de negocio y la comunicación con el servicio web externo. Cada controlador utiliza servicios para realizar operaciones relacionadas con los pasajeros, las reservas y los vuelos.
 
-- :octocat: **`PasajeroService`**: Este servicio se encarga de la lógica de negocio relacionada con los pasajeros. Proporciona métodos para interactuar con el servicio web de pasajeros, como obtener información de pasajeros y crear nuevos registros de pasajeros.
+- :hammer_and_wrench: **`PasajeroService`**: Este servicio se encarga de la lógica de negocio relacionada con los pasajeros. Proporciona métodos para interactuar con el servicio web de pasajeros, como obtener información de pasajeros y crear nuevos registros de pasajeros.
 
-- :octocat: **`ReservaService`**: Gestiona la lógica de negocio de las reservas de vuelos. Permite crear nuevas reservas y obtener información sobre reservas existentes.
+- :hammer_and_wrench: **`ReservaService`**: Gestiona la lógica de negocio de las reservas de vuelos. Permite crear nuevas reservas y obtener información sobre reservas existentes.
 
-- :octocat: **`VueloService`**: Controla la lógica de negocio relacionada con los vuelos. Proporciona métodos para buscar vuelos, obtener detalles de vuelos y administrar la información de vuelos.
+- :hammer_and_wrench: **`VueloService`**: Controla la lógica de negocio relacionada con los vuelos. Proporciona métodos para buscar vuelos, obtener detalles de vuelos y administrar la información de vuelos.
 
 ## Configuración del Proyecto
 
@@ -91,7 +89,3 @@ Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE)
 ---
 
 **Autor:** Víctor Colorado "Kid A"
-
-**Versión:** 1.0
-
-**Desde:** 19 de septiembre de 2023
