@@ -1,0 +1,9 @@
+com.viewnext.kidaprojects.agenciaviajes
+com.viewnext.kidaprojects.agenciaviajes.config
+com.viewnext.kidaprojects.agenciaviajes.dto
+com.viewnext.kidaprojects.agenciaviajes.mappers
+com.viewnext.kidaprojects.agenciaviajes.model
+com.viewnext.kidaprojects.agenciaviajes.repository
+com.viewnext.kidaprojects.agenciaviajes.restcontrollers
+com.viewnext.kidaprojects.agenciaviajes.service
+com.viewnext.kidaprojects.agenciaviajes.viewcontrollers
